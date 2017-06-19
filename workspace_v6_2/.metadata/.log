@@ -2841,3 +2841,25 @@ java.nio.channels.ClosedByInterruptException
 	at org.eclipse.cdt.internal.ui.text.c.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:144)
 	at org.eclipse.cdt.internal.ui.text.c.hover.CEditorTextHoverProxy.getHoverInfo2(CEditorTextHoverProxy.java:84)
 	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:166)
+!SESSION 2017-06-19 22:25:41.916 -----------------------------------------------
+eclipse.buildId=4.6.0.I20160606-1100
+java.version=1.8.0_112
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product com.ti.ccstudio.branding.product
+
+!ENTRY com.ti.common.core 4 0 2017-06-19 22:26:20.919
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 4 0 2017-06-19 22:26:20.919
+!MESSAGE debugServerDir=C:/ti/ccsv7/ccs_base/DebugServer
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-06-19 22:26:42.872
+!MESSAGE Indexed 'gpio_input_interrupt' (3 sources, 11 headers) in 2.61 sec: 1,038 declarations; 2,212 references; 1 unresolved inclusions; 18 syntax errors; 15 unresolved names (0.46%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-06-19 22:26:44.020
+!MESSAGE Indexed 'interrupt_changing_priorities' (3 sources, 12 headers) in 1 sec: 1,046 declarations; 2,216 references; 1 unresolved inclusions; 0 syntax errors; 2 unresolved names (0.061%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-06-19 22:26:45.361
+!MESSAGE Indexed 'test_1' (4 sources, 19 headers) in 1.31 sec: 1,735 declarations; 3,736 references; 1 unresolved inclusions; 0 syntax errors; 2 unresolved names (0.037%)

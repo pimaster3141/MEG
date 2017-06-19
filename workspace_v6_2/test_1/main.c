@@ -6,7 +6,7 @@
 
 #include "msp.h"
 #include "string.h"
-#include "driverlib.h"
+#include <driverlib.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include "UART.h"

@@ -24,4 +24,10 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>DRIVERLIB</name>
+			<value>$%7BWORKSPACE_LOC%7D/driverlib/MSP432P4xx</value>
+		</variable>
+	</variableList>
 </projectDescription>
