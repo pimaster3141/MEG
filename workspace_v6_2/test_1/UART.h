@@ -17,6 +17,6 @@ void UARTSetup(void);
 void UARTSendByte(char byte);
 void UARTSendArray(char *TxArray, char ArrayLength);
 void UARTSendIntArray(int *data, char length);
-extern void EUSCIA2_IRQHandler(void);
+extern void EUSCIA3_IRQHandler(void);
 
 #endif /* UART_H_ */
