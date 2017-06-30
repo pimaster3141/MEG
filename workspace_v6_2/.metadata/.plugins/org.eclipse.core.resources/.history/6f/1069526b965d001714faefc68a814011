@@ -4,13 +4,13 @@
 //
 //****************************************************************************
 
-#include "msp432p401r.h"
+#include "msp.h"
 #include "string.h"
 #include "driverlib.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include "UART.h"
-//#include "math.h"
+#include "math.h"
 /*
 uint8_t flag = 1;
 uint8_t MIDI = 0;

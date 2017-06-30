@@ -4,9 +4,9 @@
 //
 //****************************************************************************
 
-#include "msp432p401r.h"
+#include "msp432p401.h"
 #include "string.h"
-#include "driverlib.h"
+//#include "driverlib.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include "UART.h"
