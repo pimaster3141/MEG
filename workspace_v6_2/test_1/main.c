@@ -47,9 +47,10 @@ uint16_t velocity = 0;
 
 #define NumOfKeys 25
 uint8_t a = 0;							//key offset
-static volatile uint8_t Pin2MIDI[NumOfKeys] = {48, 49, 50, 51, 52, 53, 54, 55, 60, 57,               //Map Pin diagram to Key notes
+static volatile uint8_t Pin2MIDI[NumOfKeys] = {48, 49, 50, 51, 52, 53, 54, 55, 56, 57,               //Map Pin diagram to Key notes
 												58,59,60,61,62,63,64,65,66,67,68,69,70,71,72};
-volatile uint8_t flag[NumOfKeys] = {1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+volatile uint8_t flag[NumOfKeys] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+volatile uint8_t tout[NumOfKeys] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 volatile uint8_t MIDI[NumOfKeys];									//all of these arrays initalized to zero
 volatile uint16_t T1[NumOfKeys];
 volatile uint16_t T2[NumOfKeys];
@@ -65,7 +66,12 @@ volatile char MIDINoteOn[3] = {0x90, 0x3c, 0x00};
 volatile char MIDINoteOff[3] = {0x80, 0x3c, 127};
 
 void main(void)
-  {
+     {
+	P7SEL0 = 0x00;			//all inputs
+	P7SEL1 = 0x00;
+	P7REN = 0x00;
+	P7DIR = 0x10;
+	P7OUT = 0x00;			//set debugging output high
 	//printf("\n MIDI = %u\n",1);
 	/*Enable all necessary clock registers*/
 
@@ -98,16 +104,31 @@ void main(void)
 
     //main loop checking state of comparator
     while(1){
+    	P7OUT |= BIT4;
+/*
+    	uint16_t tim1 = TA1R;
+    	uint16_t tim2 = tim1;
+    	P7OUT = P7OUT ^ 1<<4;			//debugging pin
+    	while((tim2 - tim1) < 40000){
+    		tim2 = TA1R;
+    	}
+    	P7OUT = P7OUT ^ 1<<4;			//debugging pin
+
+    	while(1){
+
+    	}*/
 
 /*check for comph 1 */
-    	if((P2IN & 0x80) && MIDI[P6_0]){
-
-    		MIDINoteOff[1] = Pin2MIDI[P6_0];
-    		Off = MIDINoteOff;
-    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+/*comph 1*/
+     	if((P2IN & 0x80) && MIDI[P6_0]){
+	   		MIDINoteOff[1] = Pin2MIDI[P6_0];
+     		Off = MIDINoteOff;
+    	    UARTSendArray(Off,MIDILength);				//send NoteOFF message
     		MIDI[P6_0] = 0;									//clear MIDI send flag - sending note off
-    		//P7OUT = P7OUT ^ 1<<4;					//debugging pin
-    	}
+    		P6IES |= 1  ; // writes 1 to enable interrupt
+
+    	    	}
+
 
 /*comph 2*/
     	if((P2IN & 0x40) && MIDI[P3_2]){
@@ -116,6 +137,7 @@ void main(void)
     		Off = MIDINoteOff;
     		UARTSendArray(Off,MIDILength);				//send NoteOFF message
     		MIDI[P3_2] = 0;									//clear MIDI send flag - sending note off
+
 
     	}
 
@@ -216,8 +238,124 @@ void main(void)
     		MIDI[P4_6] = 0;									//clear MIDI send flag - sending note off
 
     	}
+/* comph 13 */
+    	if((P7IN & 0x08) && MIDI[P4_7]){
 
+    		MIDINoteOff[1] = Pin2MIDI[P4_7];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P4_7] = 0;									//clear MIDI send flag - sending note off
 
+    	}
+
+/* comph 14---- needs work (*/
+    	if((P9IN & 0x08) && MIDI[P6_5]){
+
+    		MIDINoteOff[1] = Pin2MIDI[P6_5];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P6_5] = 0;									//clear MIDI send flag - sending note off
+
+    	}
+
+/*comph 15 */
+    	if((P6IN & 0x04) && MIDI[P5_4]){
+
+    		MIDINoteOff[1] = Pin2MIDI[P5_4];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P5_4] = 0;									//clear MIDI send flag - sending note off
+
+    	}
+
+/*comph 16 */
+    	if((P5IN & 0x08) && MIDI[P6_4]){
+
+    		MIDINoteOff[1] = Pin2MIDI[P6_4];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P6_4] = 0;									//clear MIDI send flag - sending note off
+
+    	}
+
+/* comph 17 */
+    	if((P9IN & 0x04) && MIDI[P5_5]){
+
+    		MIDINoteOff[1] = Pin2MIDI[P5_5];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P5_5] = 0;									//clear MIDI send flag - sending note off
+
+    	}
+
+/* comph 18 */
+    	if((P8IN & 0x08) && MIDI[P2_3]){
+
+    		MIDINoteOff[1] = Pin2MIDI[P2_3];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P2_3] = 0;									//clear MIDI send flag - sending note off
+
+    	}
+
+/* comph 19 */
+    	if((P8IN & 0x04) && MIDI[P1_7]){
+
+    		MIDINoteOff[1] = Pin2MIDI[P1_7];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P1_7] = 0;									//clear MIDI send flag - sending note off
+
+    	}
+
+/* comph 20 */
+    	if((P9IN & 0x02) && MIDI[P5_1]){
+
+    		MIDINoteOff[1] = Pin2MIDI[P5_1];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P5_1] = 0;									//clear MIDI send flag - sending note off
+
+    	}
+
+/* comph 21 */
+    	if((P8IN & 0x10) && MIDI[P5_0]){
+
+    		MIDINoteOff[1] = Pin2MIDI[P5_0];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P5_0] = 0;									//clear MIDI send flag - sending note off
+    	}
+/* comph 22 */
+    	if((P8IN & 0x80) && MIDI[P3_5]){
+
+       		MIDINoteOff[1] = Pin2MIDI[P3_5];
+       		Off = MIDINoteOff;
+       		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+       		MIDI[P3_5] = 0;									//clear MIDI send flag - sending note off
+
+       	}
+
+/* comph 23 */
+    	if((P9IN & 0x01) && MIDI[P5_2]){
+
+    		MIDINoteOff[1] = Pin2MIDI[P5_2];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P5_2] = 0;									//clear MIDI send flag - sending note off
+
+    	}
+
+/* comph 24 */
+    	if((P8IN & 0x40) && MIDI[P3_7]){
+
+    		MIDINoteOff[1] = Pin2MIDI[P3_7];
+    		Off = MIDINoteOff;
+    		UARTSendArray(Off,MIDILength);				//send NoteOFF message
+    		MIDI[P3_7] = 0;									//clear MIDI send flag - sending note off
+
+    	}
+    	P7OUT = P7OUT ^ 1<<4;			//debugging pin
     }
 }
 
@@ -233,11 +371,11 @@ void ISRsetup(void){
 		P6REN = 0x00;			//dont enable pulldowns/pullups
 
 		P6IFG = 0x00; 			//no interrupt flags
-		P6IE = 0x33;			//interrupts on 0,1,4,5
+		P6IES = 0x33;			//interrupts on 0,1,4,5
 		MAP_Interrupt_enableInterrupt(INT_PORT6);
 
-		/*set transition of interrupts to high-low first */
-		P6IES = 0x33;
+		/*set interrupts*/
+		P6IE = 0x33;
 
 //Configure Port 3 for inputs and interrupts
 		P3SEL0 = 0x00;			//inputs
@@ -247,11 +385,11 @@ void ISRsetup(void){
 		P3REN = 0x00;			//dont enable pulldowns/pullups
 
 		P3IFG = 0x00; 			//no interrupt flags
-		P3IE = 0xEC;			//interrupts on 0,1,4,5
+		P3IES = 0xEC;			//interrupts on 0,1,4,5
 		MAP_Interrupt_enableInterrupt(INT_PORT3);
 
-	/*set transition of interrupts to high-low first */
-		P3IES = 0xEC;
+	/*set interrupts  */
+		P3IE = 0xEC;
 
 //Configure Port 5 for inputs and interrupts
 		P5SEL0 = 0x00;			//inputs
@@ -261,11 +399,11 @@ void ISRsetup(void){
 		P5REN = 0x00;			//dont enable pulldowns/pullups
 
 	   	P5IFG = 0x00; 			//no interrupt flags
-		P5IE = 0x37;			//interrupts on 0,1,4,5
+		P5IES = 0x37;			//interrupts on 0,1,4,5
 		MAP_Interrupt_enableInterrupt(INT_PORT5);
 
-/*set transition of interrupts to high-low first */
-		P6IES = 0x37;
+/*set interrupts */
+		P5IE = 0x37;
 
 
 //Configure, Port 4 for inputs and interrupts
@@ -276,11 +414,11 @@ void ISRsetup(void){
 	    P4REN = 0x00;						//don't enable any pulldowns/pullups
 
 	    P4IFG = 0x00; 								//clear all interrupt flags right away
-	    P4IE = 0xFF; 								//enable interrupt for port 4 pin 2 and pin 3
+	    P4IES = 0xFF; 								//enable interrupt for port 4 pin 2 and pin 3
 	    MAP_Interrupt_enableInterrupt(INT_PORT4);	//enable interrupt
 
-	    //Set transition of interrupt - high-low transition to begin
-	    P4IES = 0xFF;
+	    //Set interrupt
+	    P4IE = 0xFF;
 
 //Configure Port 1 for inputs and interrupts
 		P1SEL0 = 0x00;			//inputs
@@ -290,11 +428,11 @@ void ISRsetup(void){
 		P1REN = 0x00;			//dont enable pulldowns/pullups
 
 		P1IFG = 0x00; 			//no interrupt flags
-		P1IE = 0xA0;			//interrupts
+		P1IES = 0xA0;			//interrupts
 		MAP_Interrupt_enableInterrupt(INT_PORT1);
 
-			/*set transition of interrupts to high-low first */
-		P1IES = 0xA0;
+			/*set interrupts */
+		P1IE = 0xA0;
 
 
 //Configure Port 2 for inputs and interrupts
@@ -304,17 +442,17 @@ void ISRsetup(void){
 		P2DIR = 0x00;			//set all inputs,except P2.2
 		P2REN = 0x00;			//dont enable pulldowns/pullups
 		P2IFG = 0x00; 			//no interrupt flags
-		P2IE = 0x08;			//interrupts on 0,1,4,5
+		P2IES = 0x08;			//interrupts on 0,1,4,5
 		MAP_Interrupt_enableInterrupt(INT_PORT2);
 
-/*set transition of interrupts to high-low first */
-		P2IES = 0x08;
+/*set interrupts */
+		P2IE= 0x08;
 
 /////////////*configure rest of ports *////////////////
 
 /*port 9 */
-		P9SEL0 = 0x00;			//inputs
-		// P9SEL1 = 0x00; --> defined in uart code for MIDI
+		P9SEL1 = 0x00;			//inputs
+		// P9SEL0 = 0x00; --> defined in uart code for MIDI
 		P9REN = 0x00;			//dont enable pulldowns/pullups
 		P9DIR = 0x80;			//set all inputs, except for P9.7(uart)
 
@@ -324,13 +462,13 @@ void ISRsetup(void){
 		P8REN = 0x00;
 		P8DIR = 0x00;
 
-/*port 7 */
+/*port 7
 		P7SEL0 = 0x00;			//all inputs
 		P7SEL1 = 0x00;
 		P7REN = 0x00;
 		P7DIR = 0x10;
-		P7OUT = 0x10;			//set debugging output high
-
+		P7OUT = 0x00;			//set debugging output high
+*/
 
 
 //enable all interrupts to processor
@@ -356,20 +494,20 @@ void UARTset (void){
 
 uint8_t convert_velocity(uint16_t vel){
 
-
-		if (vel > 15000){								//cap off to go in our range
-			vel = 15000;
+	//printf("\nveloc = %u\n",vel);
+		if (vel > 4000){								//cap off to go in our range
+			vel = 4000;
     			}
 
-    	if (vel < 1100 & (vel != 5)){
-    		vel = 1100;
+    	if ((vel < 500)){
+    		vel = 500;
     			}
-    	if (vel == 5){
-    		vel = 15000;
+    	/*if (vel < 50){
+    		vel = 3000;
     			}
-
+*/
     	float temp = vel;
-    	temp = ((temp-1100)/(13000))*127.0;						//divide into our range (1-127)
+    	temp = ((temp-500)/(3500))*127.0;						//divide into our range (1-127)
 
     	uint8_t vol = temp; 							//get integer value
 
@@ -380,25 +518,20 @@ uint8_t convert_velocity(uint16_t vel){
     		vol = 120;
     			}
     	uint8_t volume = 128 - vol;
-
+    	//printf("\n Vol = %u\n",volume);
     		return volume;
 }
 
 
 void KeyISR6 (int pin,int shift){
     		if (flag[pin] == 1){							//check int transition value - here a falling edge
-
-    			if(MIDI[pin])
-    			{	}					//check whether MIDI note has been sent - if so, do nothing
-
-    			else{
+    				//Ttest1 = TA1R;
     				T1[pin] = TA1R; 								//grab current timer 1 value
     				//printf("\n Timer1 = %u\n",T1); 				//debug command
     				//P3OUT = P3OUT ^ 1<<3; 				//toggle output pin (debugging statement)
-    				P6IES = P6IES ^ 1<<shift;					//toggle Int transition
+    				P6IES &= ~(1<<shift); // writes 0 to shift
     				flag[pin] = 0;
     			}
-    		}
 
     		else {											//this is now a rising edge
     			T2[pin] = TA1R;
@@ -410,31 +543,27 @@ void KeyISR6 (int pin,int shift){
     			if (T1[pin] >= T2[pin]){
     				T1[pin] = (0xFFFF) - T1[pin];
     				velocity = T2[pin] + T1[pin];									//calculate velocity value and send MIDI note
-    				velocity = convert_velocity(velocity);				//convert velocity value to volume value
-    				MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
-    				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
-    				On = MIDINoteOn;										//pointer initialization
-    				UARTSendArray(On,MIDILength);						//Send MIDI note!
-    				//printf("\n MIDI = %u\n",1);
-    				Ttest1 = TA1R;
-
-
+    				//printf("\nveloc = %u\n",velocity);
     				}
+
     			else{
     				velocity = T2[pin] - T1[pin];
-    				velocity = convert_velocity(velocity);				//convert velocity value to volume value
-    				MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
-    				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
-    				On = MIDINoteOn;										//pointer initialization
-    				UARTSendArray(On, MIDILength);						//Send MIDI note!
-    				Ttest1 = TA1R;
+    				//printf("\nveloc = %u\n",velocity);
     			}
+    			//uint16_t veloc = Ttest2 - Ttest1;
+    			//printf("\nveloc = %u\n",veloc);
+    			if(velocity > 30){
+        			velocity = convert_velocity(velocity);				//convert velocity value to volume value
+        			MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
+        			MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
+      				On = MIDINoteOn;										//pointer initialization
+        			UARTSendArray(On,MIDILength);						//Send MIDI note!
+        			MIDI[pin] = 1;
+        			P6IES |= 1<<shift; // writes 1 to shift
+        			P6IE &= ~(1<<shift); // writes 0 to interrupt
+        			flag[pin] = 1; 									//reset ISR flag
 
-    			MIDI[pin] = 1; 									//notify a MIDI note ON has been sent
-    			P6IES = P6IES ^ 1<<shift;						//also toggle IES flag to change the interrupt edge
-    			flag[pin] = 1; 									//reset ISR flag
-    			//P7OUT = P7OUT ^ 1<<4;				//debugging pin
-
+    			}
     		}
 }
 
@@ -445,16 +574,19 @@ void KeyISR4 (int pin,int shift){
     			{	}					//check whether MIDI note has been sent - if so, do nothing
 
     			else{
+    				Ttest1 = TA1R;
     				T1[pin] = TA1R; 								//grab current timer 1 value
     				//printf("\n Timer1 = %u\n",T1); 				//debug command
     				//P3OUT = P3OUT ^ 1<<3; 				//toggle output pin (debugging statement)
-    				P4IES = P4IES ^ 1<<shift;					//toggle Int transition
+    				P4IES &= ~(1<<shift); // writes 0 to shift
+
     				flag[pin] = 0;
     			}
     		}
 
     		else {											//this is now a rising edge
     			T2[pin] = TA1R;
+    			Ttest2 = TA1R;
     			//printf("\n timer1= %u\n",T1);
     			//printf("\n timer2= %u\n",T2);
     			//printf("\n Timer2 = %u\n",T2);
@@ -463,31 +595,32 @@ void KeyISR4 (int pin,int shift){
     			if (T1[pin] >= T2[pin]){
     				T1[pin] = (0xFFFF) - T1[pin];
     				velocity = T2[pin] + T1[pin];									//calculate velocity value and send MIDI note
-    				velocity = convert_velocity(velocity);				//convert velocity value to volume value
-    				MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
-    				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
-    				On = MIDINoteOn;										//pointer initialization
-    				UARTSendArray(On,MIDILength);						//Send MIDI note!
-
-
+    				//printf("\nveloc = %u\n",velocity);
     				}
+
     			else{
     				velocity = T2[pin] - T1[pin];
-    				velocity = convert_velocity(velocity);				//convert velocity value to volume value
-    				MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
-    				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
-    				On = MIDINoteOn;										//pointer initialization
-    				UARTSendArray(On, MIDILength);						//Send MIDI note!
-
-    				//printf("\n MIDI = %u\n",1);
+    				//printf("\nveloc = %u\n",velocity);
+    			}
+    			//uint16_t veloc = Ttest2 - Ttest1;
+    			//printf("\nveloc = %u\n",veloc);
+    			if(velocity > 100){
+        			velocity = convert_velocity(velocity);				//convert velocity value to volume value
+        			MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
+        			MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
+      				On = MIDINoteOn;										//pointer initialization
+        			UARTSendArray(On,MIDILength);						//Send MIDI note!
+        			MIDI[pin] = 1;
     			}
 
-    			MIDI[pin] = 1; 									//notify a MIDI note ON has been sent
-    			P4IES = P4IES ^ 1<<shift;						//also toggle IES flag to change the interrupt edge
+
+    			            //notify a MIDI note ON has been sent
+    			P4IES |= 1<<shift; // writes 1 to shift
+
+
     			flag[pin] = 1; 									//reset ISR flag
-        		//P7OUT = P7OUT ^ 1<<4;				//debugging pin
-    			//printf("\n MIDI = %u\n", MIDI[pin]);
-    			//printf("MIDI = %u", MIDI[pin]);
+
+
     		}
 }
 
@@ -498,16 +631,18 @@ void KeyISR2 (int pin,int shift){
     			{	}					//check whether MIDI note has been sent - if so, do nothing
 
     			else{
+    				Ttest1 = TA1R;
     				T1[pin] = TA1R; 								//grab current timer 1 value
     				//printf("\n Timer1 = %u\n",T1); 				//debug command
     				//P3OUT = P3OUT ^ 1<<3; 				//toggle output pin (debugging statement)
-    				P2IES = P2IES ^ 1<<shift;					//toggle Int transition
+    				P2IES &= ~(1<<shift); // writes 0 to shift
     				flag[pin] = 0;
     			}
     		}
 
     		else {											//this is now a rising edge
     			T2[pin] = TA1R;
+    			Ttest2 = TA1R;
     			//printf("\n timer1= %u\n",T1);
     			//printf("\n timer2= %u\n",T2);
     			//printf("\n Timer2 = %u\n",T2);
@@ -516,31 +651,30 @@ void KeyISR2 (int pin,int shift){
     			if (T1[pin] >= T2[pin]){
     				T1[pin] = (0xFFFF) - T1[pin];
     				velocity = T2[pin] + T1[pin];									//calculate velocity value and send MIDI note
-    				velocity = convert_velocity(velocity);				//convert velocity value to volume value
-    				MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
-    				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
-    				On = MIDINoteOn;										//pointer initialization
-    				UARTSendArray(On,MIDILength);						//Send MIDI note!
-    				//printf("\n MIDI = %u\n",1);
-    				Ttest1 = TA1R;
-
-
+    				//printf("\nveloc = %u\n",velocity);
     				}
+
     			else{
     				velocity = T2[pin] - T1[pin];
-    				velocity = convert_velocity(velocity);				//convert velocity value to volume value
-    				MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
-    				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
-    				On = MIDINoteOn;										//pointer initialization
-    				UARTSendArray(On, MIDILength);						//Send MIDI note!
-    				Ttest1 = TA1R;
+    				//printf("\nveloc = %u\n",velocity);
+    			}
+    			//uint16_t veloc = Ttest2 - Ttest1;
+    			//printf("\nveloc = %u\n",veloc);
+    			if(velocity > 100){
+        			velocity = convert_velocity(velocity);				//convert velocity value to volume value
+        			MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
+        			MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
+      				On = MIDINoteOn;										//pointer initialization
+        			UARTSendArray(On,MIDILength);						//Send MIDI note!
+        			MIDI[pin] = 1;
     			}
 
-    			MIDI[pin] = 1; 									//notify a MIDI note ON has been sent
-    			P2IES = P2IES ^ 1<<shift;						//also toggle IES flag to change the interrupt edge
+
+    			            //notify a MIDI note ON has been sent
+    			P2IES |= 1<<shift; // writes 1 to shift
     			flag[pin] = 1; 									//reset ISR flag
-    			//printf("\n MIDI = %u\n", MIDI[pin]);
-    			//printf("MIDI = %u", MIDI[pin]);
+
+
     		}
 }
 
@@ -551,16 +685,18 @@ void KeyISR5 (int pin,int shift){
     			{	}					//check whether MIDI note has been sent - if so, do nothing
 
     			else{
+    				Ttest1 = TA1R;
     				T1[pin] = TA1R; 								//grab current timer 1 value
     				//printf("\n Timer1 = %u\n",T1); 				//debug command
     				//P3OUT = P3OUT ^ 1<<3; 				//toggle output pin (debugging statement)
-    				P5IES = P5IES ^ 1<<shift;					//toggle Int transition
+    				P5IES &= ~(1<<shift); // writes 0 to shift
     				flag[pin] = 0;
     			}
     		}
 
     		else {											//this is now a rising edge
     			T2[pin] = TA1R;
+    			Ttest2 = TA1R;
     			//printf("\n timer1= %u\n",T1);
     			//printf("\n timer2= %u\n",T2);
     			//printf("\n Timer2 = %u\n",T2);
@@ -569,30 +705,30 @@ void KeyISR5 (int pin,int shift){
     			if (T1[pin] >= T2[pin]){
     				T1[pin] = (0xFFFF) - T1[pin];
     				velocity = T2[pin] + T1[pin];									//calculate velocity value and send MIDI note
-    				velocity = convert_velocity(velocity);				//convert velocity value to volume value
-    				MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
-    				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
-    				On = MIDINoteOn;										//pointer initialization
-    				UARTSendArray(On,MIDILength);						//Send MIDI note!
-    				//printf("\n MIDI = %u\n",1);
-    				Ttest1 = TA1R;
-
-
+    				//printf("\nveloc = %u\n",velocity);
     				}
+
     			else{
     				velocity = T2[pin] - T1[pin];
-    				velocity = convert_velocity(velocity);				//convert velocity value to volume value
-    				MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
-    				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
-    				On = MIDINoteOn;										//pointer initialization
-    				UARTSendArray(On, MIDILength);						//Send MIDI note!
-    				Ttest1 = TA1R;
+    				//printf("\nveloc = %u\n",velocity);
     			}
-    			MIDI[pin] = 1; 									//notify a MIDI note ON has been sent
-    			P5IES = P5IES ^ 1<<shift;						//also toggle IES flag to change the interrupt edge
+    			//uint16_t veloc = Ttest2 - Ttest1;
+    			//printf("\nveloc = %u\n",veloc);
+    			if(velocity > 100){
+        			velocity = convert_velocity(velocity);				//convert velocity value to volume value
+        			MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
+        			MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
+      				On = MIDINoteOn;										//pointer initialization
+        			UARTSendArray(On,MIDILength);						//Send MIDI note!
+        			MIDI[pin] = 1;
+    			}
+
+
+    			            //notify a MIDI note ON has been sent
+    			P5IES |= 1<<shift; // writes 1 to shift
     			flag[pin] = 1; 									//reset ISR flag
-    			//printf("\n MIDI = %u\n", MIDI[pin]);
-    			//printf("MIDI = %u", MIDI[pin]);
+
+
     		}
 }
 
@@ -603,16 +739,18 @@ void KeyISR3 (int pin,int shift){
     			{	}					//check whether MIDI note has been sent - if so, do nothing
 
     			else{
+    				Ttest1 = TA1R;
     				T1[pin] = TA1R; 								//grab current timer 1 value
     				//printf("\n Timer1 = %u\n",T1); 				//debug command
     				//P3OUT = P3OUT ^ 1<<3; 				//toggle output pin (debugging statement)
-    				P3IES = P3IES ^ 1<<shift;					//toggle Int transition
+    				P3IES &= ~(1<<shift); // writes 0 to shift
     				flag[pin] = 0;
     			}
     		}
 
     		else {											//this is now a rising edge
     			T2[pin] = TA1R;
+    			Ttest2 = TA1R;
     			//printf("\n timer1= %u\n",T1);
     			//printf("\n timer2= %u\n",T2);
     			//printf("\n Timer2 = %u\n",T2);
@@ -621,30 +759,30 @@ void KeyISR3 (int pin,int shift){
     			if (T1[pin] >= T2[pin]){
     				T1[pin] = (0xFFFF) - T1[pin];
     				velocity = T2[pin] + T1[pin];									//calculate velocity value and send MIDI note
-    				velocity = convert_velocity(velocity);				//convert velocity value to volume value
-    				MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
-    				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
-    				On = MIDINoteOn;										//pointer initialization
-    				UARTSendArray(On,MIDILength);						//Send MIDI note!
-    				//printf("\n MIDI = %u\n",1);
-    				Ttest1 = TA1R;
-
-
+    				//printf("\nveloc = %u\n",velocity);
     				}
+
     			else{
     				velocity = T2[pin] - T1[pin];
-    				velocity = convert_velocity(velocity);				//convert velocity value to volume value
-    				MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
-    				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
-    				On = MIDINoteOn;										//pointer initialization
-    				UARTSendArray(On, MIDILength);						//Send MIDI note!
-    				Ttest1 = TA1R;
+    				//printf("\nveloc = %u\n",velocity);
     			}
-    			MIDI[pin] = 1; 									//notify a MIDI note ON has been sent
-    			P3IES = P3IES ^ 1<<shift;						//also toggle IES flag to change the interrupt edge
+    			//uint16_t veloc = Ttest2 - Ttest1;
+    			//printf("\nveloc = %u\n",veloc);
+    			if(velocity > 100){
+        			velocity = convert_velocity(velocity);				//convert velocity value to volume value
+        			MIDINoteOn[2] = velocity;							//replace Note on buffer with proper velocity
+        			MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
+      				On = MIDINoteOn;										//pointer initialization
+        			UARTSendArray(On,MIDILength);						//Send MIDI note!
+        			MIDI[pin] = 1;
+    			}
+
+
+    			            //notify a MIDI note ON has been sent
+    			P3IES |= 1<<shift; // writes 1 to shift
     			flag[pin] = 1; 									//reset ISR flag
-    			//printf("\n MIDI = %u\n", MIDI[pin]);
-    			//printf("MIDI = %u", MIDI[pin]);
+
+
     		}
 }
 
@@ -658,7 +796,7 @@ void KeyISR1 (int pin,int shift){
     				T1[pin] = TA1R; 								//grab current timer 1 value
     				//printf("\n Timer1 = %u\n",T1); 				//debug command
     				//P3OUT = P3OUT ^ 1<<3; 				//toggle output pin (debugging statement)
-    				P1IES = P1IES ^ 1<<shift;					//toggle Int transition
+    				P1IES &= ~(1<<shift); // writes 0 to shift
     				flag[pin] = 0;
     			}
     		}
@@ -679,7 +817,6 @@ void KeyISR1 (int pin,int shift){
     				On = MIDINoteOn;										//pointer initialization
     				UARTSendArray(On,MIDILength);						//Send MIDI note!
     				//printf("\n MIDI = %u\n",1);
-    				Ttest1 = TA1R;
 
 
     				}
@@ -690,10 +827,9 @@ void KeyISR1 (int pin,int shift){
     				MIDINoteOn[1] = Pin2MIDI[pin];						//map proper MIDI note value to MIDI array
     				On = MIDINoteOn;										//pointer initialization
     				UARTSendArray(On, MIDILength);						//Send MIDI note!
-    				Ttest1 = TA1R;
     			}
     			MIDI[pin] = 1; 									//notify a MIDI note ON has been sent
-    			P1IES = P1IES ^ 1<<shift;						//also toggle IES flag to change the interrupt edge
+    			P1IES |= 1<<shift; // writes 1 to shift
     			flag[pin] = 1; 									//reset ISR flag
     			//printf("\n MIDI = %u\n", MIDI[pin]);
     			//printf("MIDI = %u", MIDI[pin]);
@@ -918,7 +1054,6 @@ void PORT1_IRQHandler(void)
 
     		case 0x0C :
     	    KeyISR1(P1_5,5);
-    	    //printf("\nMIDI =%u \n",10);
     		break;
 
     		case 0x0E :

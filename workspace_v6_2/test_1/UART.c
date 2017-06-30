@@ -30,7 +30,8 @@ void UARTSetup(void)
 	//UCA2MCTLW |= UCOS16;  // because 384>16 set UCOS16 = 1b
 
 	// Configure UART pins
-	P9->SEL1 |= BIT6 | BIT7;           // set 2-UART pin as second function
+	 P9SEL0 = 0xC0;
+	//P9->SEL1 |= BIT6 | BIT7;           // set 2-UART pin as second function
 	//P3SEL0 |= BIT2 | BIT3;
 	// UCA2CTL0 &= ~UCSWRST;	       // init uart
 
