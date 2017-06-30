@@ -384,7 +384,7 @@ void ISRsetup(void){
 		P3SEL1 = 0x00;
 
 		P3DIR = 0x00;			//set all inputs
-		P3REN = 0xFF;			//dont enable pulldowns/pullups -- change!!!!!!!!
+		P3REN = 0x00;			//dont enable pulldowns/pullups
 
 		P3IFG = 0x00; 			//no interrupt flags
 		P3IES = 0xEC;			//interrupts on 0,1,4,5

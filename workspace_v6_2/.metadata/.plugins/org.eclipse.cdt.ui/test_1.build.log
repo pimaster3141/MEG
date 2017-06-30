@@ -4,55 +4,55 @@
 "C:\\ti\\ccsv7\\utils\\bin\\gmake" -k all 
 'Building file: ../main.c'
 'Invoking: MSP432 Compiler'
-"C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --include_path="C:/ti/ccsv7/ccs_base/arm/include" --include_path="C:/Users/Julian/Downloads/workspace_v63/MEG-master/workspace_v6_2/driverlib/MSP432P4xx" --include_path="C:/ti/ccsv7/ccs_base/arm/include/CMSIS" --include_path="C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/include" --advice:power=all --define=__MSP432P401R__ --define=TARGET_IS_MSP432P4XX --define=ccs -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="main.d"  "../main.c"
-"../main.c", line 74: warning #225-D: function "printf" declared implicitly
-"../main.c", line 93: warning #225-D: function "UARTset" declared implicitly
-"../main.c", line 96: warning #225-D: function "ISRsetup" declared implicitly
-"../main.c", line 121: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 133: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 144: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 154: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 164: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 174: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 184: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 194: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 204: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 213: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 223: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 232: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 241: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 251: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 261: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 271: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 281: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 291: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 301: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 311: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 321: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 329: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 339: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 349: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 74: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --include_path="C:/ti/ccsv7/ccs_base/arm/include" --include_path="C:/Users/Julian/Desktop/Git/MEG/workspace_v6_2/driverlib/MSP432P4xx" --include_path="C:/ti/ccsv7/ccs_base/arm/include/CMSIS" --include_path="C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/include" --advice:power=all --define=__MSP432P401R__ --define=TARGET_IS_MSP432P4XX --define=ccs -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="main.d"  "../main.c"
+"../main.c", line 79: warning #225-D: function "printf" declared implicitly
+"../main.c", line 98: warning #225-D: function "UARTset" declared implicitly
+"../main.c", line 101: warning #225-D: function "ISRsetup" declared implicitly
+"../main.c", line 126: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 138: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 149: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 159: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 169: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 179: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 189: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 199: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 209: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 218: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 228: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 237: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 246: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 256: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 266: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 276: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 286: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 296: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 306: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 316: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 326: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 334: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 344: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 354: warning #225-D: function "UARTSendArray" declared implicitly
 "../main.c", line 79: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../main.c", line 81: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../main.c", line 83: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 84: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "../main.c", line 86: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../main.c", line 359: warning #161-D: declaration is incompatible with previous "ISRsetup" (declared at line 96)
-"../main.c", line 476: warning #161-D: declaration is incompatible with previous "UARTset" (declared at line 93)
-"../main.c", line 479: warning #225-D: function "UARTSetup" declared implicitly
-"../main.c", line 555: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 607: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 663: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 717: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 771: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 813: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 824: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 838: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
-"../main.c", line 892: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
-"../main.c", line 939: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
-"../main.c", line 980: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
-"../main.c", line 1025: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
-"../main.c", line 1067: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
+"../main.c", line 88: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 91: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 364: warning #161-D: declaration is incompatible with previous "ISRsetup" (declared at line 101)
+"../main.c", line 483: warning #161-D: declaration is incompatible with previous "UARTset" (declared at line 98)
+"../main.c", line 486: warning #225-D: function "UARTSetup" declared implicitly
+"../main.c", line 562: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 614: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 670: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 724: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 778: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 820: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 831: warning #225-D: function "UARTSendArray" declared implicitly
+"../main.c", line 845: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
+"../main.c", line 899: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
+"../main.c", line 946: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
+"../main.c", line 987: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
+"../main.c", line 1032: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
+"../main.c", line 1074: remark #2623-D: (ULP 5.4) Detected an assignment to a type with size less than int. To avoid unnecessary sign extension, use int-sized types for local varaibles and convert to smaller types for static storage.
 "C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/include/_defs.h", line 189 (col. 27): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/include/_defs.h", line 190 (col. 10): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/include/_defs.h", line 193 (col. 27): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive

@@ -372,26 +372,24 @@ void ISRsetup(void){
 
 		P6IFG = 0x00; 			//no interrupt flags
 		P6IES = 0x33;			//interrupts on 0,1,4,5
+		MAP_Interrupt_enableInterrupt(INT_PORT6);
 
 		/*set interrupts*/
 		P6IE = 0x33;
-		MAP_Interrupt_enableInterrupt(INT_PORT6);
-
-
 
 //Configure Port 3 for inputs and interrupts
 		P3SEL0 = 0x00;			//inputs
 		P3SEL1 = 0x00;
 
 		P3DIR = 0x00;			//set all inputs
-		P3REN = 0xFF;			//dont enable pulldowns/pullups -- change!!!!!!!!
+		P3REN = 0x00;			//dont enable pulldowns/pullups
 
 		P3IFG = 0x00; 			//no interrupt flags
 		P3IES = 0xEC;			//interrupts on 0,1,4,5
-
-		/*set interrupts  */
-		P3IE = 0xEC;
 		MAP_Interrupt_enableInterrupt(INT_PORT3);
+
+	/*set interrupts  */
+		P3IE = 0xEC;
 
 //Configure Port 5 for inputs and interrupts
 		P5SEL0 = 0x00;			//inputs
@@ -402,10 +400,10 @@ void ISRsetup(void){
 
 	   	P5IFG = 0x00; 			//no interrupt flags
 		P5IES = 0x37;			//interrupts on 0,1,4,5
-
-		/*set interrupts */
-		P5IE = 0x37;
 		MAP_Interrupt_enableInterrupt(INT_PORT5);
+
+/*set interrupts */
+		P5IE = 0x37;
 
 
 //Configure, Port 4 for inputs and interrupts
@@ -417,10 +415,10 @@ void ISRsetup(void){
 
 	    P4IFG = 0x00; 								//clear all interrupt flags right away
 	    P4IES = 0xFF; 								//enable interrupt for port 4 pin 2 and pin 3
+	    MAP_Interrupt_enableInterrupt(INT_PORT4);	//enable interrupt
 
 	    //Set interrupt
 	    P4IE = 0xFF;
-	    MAP_Interrupt_enableInterrupt(INT_PORT4);	//enable interrupt
 
 //Configure Port 1 for inputs and interrupts
 		P1SEL0 = 0x00;			//inputs
@@ -431,10 +429,10 @@ void ISRsetup(void){
 
 		P1IFG = 0x00; 			//no interrupt flags
 		P1IES = 0xA0;			//interrupts
-
-		/*set interrupts */
-	    P1IE = 0xA0;
 		MAP_Interrupt_enableInterrupt(INT_PORT1);
+
+			/*set interrupts */
+		P1IE = 0xA0;
 
 
 //Configure Port 2 for inputs and interrupts
@@ -445,10 +443,10 @@ void ISRsetup(void){
 		P2REN = 0x00;			//dont enable pulldowns/pullups
 		P2IFG = 0x00; 			//no interrupt flags
 		P2IES = 0x08;			//interrupts on 0,1,4,5
-
-		/*set interrupts */
-		P2IE= 0x08;
 		MAP_Interrupt_enableInterrupt(INT_PORT2);
+
+/*set interrupts */
+		P2IE= 0x08;
 
 /////////////*configure rest of ports *////////////////
 
