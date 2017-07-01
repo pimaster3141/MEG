@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 
-<!-- Auto-generated from: C:\Users\jason\Dropbox (MIT)\GitHub\MEG\workspace_v6_2\.metadata\.plugins\com.ti.ccstudio.builddefinitions.generator\native\MSP430_16.9.1.LTS.xml -->
+<!-- Auto-generated from: C:\Users\jason\Dropbox (MIT)\GitHub\MEG\workspace_v6_2\.metadata\.plugins\com.ti.ccstudio.builddefinitions.generator\native\MSP430_16.9.3.LTS.xml -->
 
 <plugin>
 
@@ -4310,7 +4310,7 @@ NOTE: User can specify --retain='*(*)' to retain all the sections from all the i
 		<option id="com.ti.ccstudio.buildDefinitions.MSP430_16.9.compilerID.LIST_DIRECTORY" chain="--asm_listing "></option>
 		<option id="com.ti.ccstudio.buildDefinitions.MSP430_16.9.compilerID.GEN_ACP_RAW" hide="true"><deprecate severity="3" diagnostic="--gen_acp_raw is deprecated and will be removed in a subsequent release. The option has been renamed to --gen_preprocessor_listing."/></option>
 		<option id="com.ti.ccstudio.buildDefinitions.MSP430_16.9.compilerID.GEN_ACP_XREF" hide="true"><deprecate severity="3" diagnostic="--gen_acp_xref is deprecated and will be removed in a subsequent release. The option has been renamed to --gen_cross_reference_listing"/></option>
-		<option id="com.ti.ccstudio.buildDefinitions.MSP430_16.9.linkerID.BUFFER_DIAGNOSTICS" hide="true"><deprecate severity="3" diagnostic="--buffer_diagnostics is deprecated and will be removed in a subsequent release. The default behavior is to line buffer diagnostics."/></option>
+		<option id="com.ti.ccstudio.buildDefinitions.MSP430_16.9.linkerID.BUFFER_DIAGNOSTICS" hide="true"><deprecate severity="3"/></option>
 		<option id="com.ti.ccstudio.buildDefinitions.MSP430_16.9.linkerID.DIAG_WRAP" hide="true"><deprecate severity="3"/></option>
 		
 	</extension>

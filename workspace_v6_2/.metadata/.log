@@ -1368,6 +1368,7 @@ java.io.FileNotFoundException: C:\Users\Julian\Desktop\Git\MEG\workspace_v6_2\.m
 	at org.eclipse.core.internal.resources.SaveManager.save(SaveManager.java:1165)
 	at org.eclipse.core.internal.resources.DelayedSnapshotJob.run(DelayedSnapshotJob.java:52)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+<<<<<<< HEAD
 
 !ENTRY org.eclipse.ui.ide 4 4 2017-06-30 19:39:43.383
 !MESSAGE Problems saving workspace
@@ -1390,6 +1391,9 @@ java.io.FileNotFoundException: C:\Users\Julian\Desktop\Git\MEG\workspace_v6_2\.m
 	at org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor$4.run(IDEWorkbenchAdvisor.java:456)
 	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
 !SESSION 2017-06-30 19:40:06.327 -----------------------------------------------
+=======
+!SESSION 2017-06-30 09:04:10.041 -----------------------------------------------
+>>>>>>> dcff83bbe408ab3da500e2675a5bcbc51b1cafb0
 eclipse.buildId=4.6.0.I20160606-1100
 java.version=1.8.0_112
 java.vendor=Oracle Corporation
@@ -1397,6 +1401,7 @@ BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
 Framework arguments:  -product com.ti.ccstudio.branding.product
 Command-line arguments:  -os win32 -ws win32 -arch x86 -product com.ti.ccstudio.branding.product
 
+<<<<<<< HEAD
 !ENTRY com.ti.common.core 4 0 2017-06-30 19:40:19.459
 !MESSAGE path=ccs_base/DebugServer
 
@@ -6430,3 +6435,26 @@ java.nio.channels.ClosedByInterruptException
 	at org.eclipse.cdt.internal.ui.text.c.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:144)
 	at org.eclipse.cdt.internal.ui.text.c.hover.CEditorTextHoverProxy.getHoverInfo2(CEditorTextHoverProxy.java:84)
 	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:165)
+=======
+!ENTRY org.eclipse.core.resources 2 10035 2017-06-30 09:07:56.708
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY com.ti.common.core 4 0 2017-06-30 09:07:56.795
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 4 0 2017-06-30 09:07:56.801
+!MESSAGE debugServerDir=C:/ti/ccsv7/ccs_base/DebugServer
+!SESSION 2017-06-30 12:16:49.836 -----------------------------------------------
+eclipse.buildId=4.6.0.I20160606-1100
+java.version=1.8.0_112
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product com.ti.ccstudio.branding.product
+
+!ENTRY com.ti.common.core 4 0 2017-06-30 12:16:55.206
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 4 0 2017-06-30 12:16:55.214
+!MESSAGE debugServerDir=C:/ti/ccsv7/ccs_base/DebugServer
+>>>>>>> dcff83bbe408ab3da500e2675a5bcbc51b1cafb0

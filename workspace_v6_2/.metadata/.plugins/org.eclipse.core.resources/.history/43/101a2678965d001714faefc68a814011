@@ -6,7 +6,7 @@
 
 #include "msp.h"
 #include "string.h"
-#include "driverlib.h"
+//#include "driverlib.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include "UART.h"
@@ -67,8 +67,6 @@ volatile char MIDINoteOff[3] = {0x80, 0x3c, 127};
 
 void main(void)
      {
-	WDTCTL = WDTPW | WDTHOLD;           // Stop watchdog timer
-
 	P7SEL0 = 0x00;			//all inputs
 	P7SEL1 = 0x00;
 	P7REN = 0x00;
@@ -101,6 +99,8 @@ void main(void)
 
 	//Setup all ports for ISR and inputs
 	ISRsetup();
+
+    WDTCTL = WDTPW | WDTHOLD;           // Stop watchdog timer
 
     //main loop checking state of comparator
     while(1){
@@ -384,7 +384,7 @@ void ISRsetup(void){
 		P3SEL1 = 0x00;
 
 		P3DIR = 0x00;			//set all inputs
-		P3REN = 0x00;			//dont enable pulldowns/pullups -- change!!!!!!!!
+		P3REN = 0xFF;			//dont enable pulldowns/pullups -- change!!!!!!!!
 
 		P3IFG = 0x00; 			//no interrupt flags
 		P3IES = 0xEC;			//interrupts on 0,1,4,5

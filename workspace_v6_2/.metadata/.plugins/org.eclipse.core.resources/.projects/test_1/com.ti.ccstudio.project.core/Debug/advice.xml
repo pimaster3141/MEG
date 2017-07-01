@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <body>
 	<version>1</version>
+<<<<<<< HEAD
 	<timestamp>0x5956ef98</timestamp>
+=======
+	<timestamp>0x59564ffd</timestamp>
+>>>>>>> dcff83bbe408ab3da500e2675a5bcbc51b1cafb0
 	<link_advice_flag>true</link_advice_flag>
 	<current_settings>
 		<option name="--opt_for_speed" value="  --opt_for_speed=1"/>
