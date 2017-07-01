@@ -92,6 +92,7 @@ void EUSCIA3_IRQHandler(void)
 	//P7OUT = P7OUT ^ 1<<4;				//debugging pin
 	//printf('ISR');
 	//if (EUSCI_A2->IFG & EUSCI_A_IFG_TXIFG)
+    __no_operation();
 	if (UCTXIFG)  // If transmission interrupt (UCTXIFG is HIGH, BUFFER empty)
 	{
 		//P7OUT = P7OUT ^ 1<<4;				//debugging pin
