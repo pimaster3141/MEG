@@ -67,8 +67,6 @@ volatile char MIDINoteOff[3] = {0x80, 0x3c, 127};
 
 void main(void)
      {
-	WDTCTL = WDTPW | WDTHOLD;           // Stop watchdog timer
-
 	P7SEL0 = 0x00;			//all inputs
 	P7SEL1 = 0x00;
 	P7REN = 0x00;
@@ -101,6 +99,8 @@ void main(void)
 
 	//Setup all ports for ISR and inputs
 	ISRsetup();
+
+    WDTCTL = WDTPW | WDTHOLD;           // Stop watchdog timer
 
     //main loop checking state of comparator
     while(1){

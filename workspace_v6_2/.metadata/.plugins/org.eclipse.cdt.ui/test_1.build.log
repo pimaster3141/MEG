@@ -5,9 +5,9 @@
 'Building file: ../main.c'
 'Invoking: MSP432 Compiler'
 "C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --include_path="C:/ti/ccsv7/ccs_base/arm/include" --include_path="C:/Users/Julian/Desktop/Git/MEG/workspace_v6_2/driverlib/MSP432P4xx" --include_path="C:/ti/ccsv7/ccs_base/arm/include/CMSIS" --include_path="C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/include" --advice:power=all --define=__MSP432P401R__ --define=TARGET_IS_MSP432P4XX --define=ccs -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="main.d"  "../main.c"
-"../main.c", line 79: warning #225-D: function "printf" declared implicitly
-"../main.c", line 98: warning #225-D: function "UARTset" declared implicitly
-"../main.c", line 101: warning #225-D: function "ISRsetup" declared implicitly
+"../main.c", line 81: warning #225-D: function "printf" declared implicitly
+"../main.c", line 100: warning #225-D: function "UARTset" declared implicitly
+"../main.c", line 103: warning #225-D: function "ISRsetup" declared implicitly
 "../main.c", line 126: warning #225-D: function "UARTSendArray" declared implicitly
 "../main.c", line 138: warning #225-D: function "UARTSendArray" declared implicitly
 "../main.c", line 149: warning #225-D: function "UARTSendArray" declared implicitly
@@ -32,13 +32,13 @@
 "../main.c", line 334: warning #225-D: function "UARTSendArray" declared implicitly
 "../main.c", line 344: warning #225-D: function "UARTSendArray" declared implicitly
 "../main.c", line 354: warning #225-D: function "UARTSendArray" declared implicitly
-"../main.c", line 79: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../main.c", line 84: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 81: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "../main.c", line 86: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "../main.c", line 88: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../main.c", line 91: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../main.c", line 364: warning #161-D: declaration is incompatible with previous "ISRsetup" (declared at line 101)
-"../main.c", line 483: warning #161-D: declaration is incompatible with previous "UARTset" (declared at line 98)
+"../main.c", line 90: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 93: remark #1532-D: (ULP 5.3) Detected printf() operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 364: warning #161-D: declaration is incompatible with previous "ISRsetup" (declared at line 103)
+"../main.c", line 483: warning #161-D: declaration is incompatible with previous "UARTset" (declared at line 100)
 "../main.c", line 486: warning #225-D: function "UARTSetup" declared implicitly
 "../main.c", line 562: warning #225-D: function "UARTSendArray" declared implicitly
 "../main.c", line 614: warning #225-D: function "UARTSendArray" declared implicitly
