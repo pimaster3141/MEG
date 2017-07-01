@@ -57,14 +57,78 @@ volatile uint8_t MIDI[NumOfKeys];                                   //all of the
 volatile char *On;
 volatile char *Off;
 char MIDILength = 3;
+char index = 0;                     //index into state array
+char lcounter = 0;
+char state;
 volatile char MIDINoteOn[3] = {0x90, 0x3c, 0x00};
 volatile char MIDINoteOff[3] = {0x80, 0x3c, 127};
 
 void main(void)
 {
-	
     WDTCTL = WDTPW | WDTHOLD;           // Stop watchdog timer
 
+	while(1){
+	    state = P1IN;                   //get status of port one
+	    for(lcounter<8,lcounter++){
+	        pinHandler(cindex,state&&0x01);
+	        state = state>>1;                    //bit shift our state
+	        cindex++;
+	        }
 
-	// test comment
+        state = P2IN;                   //get status of port one
+        for(lcounter<8,lcounter++){
+            pinHandler(cindex,state&&0x01);
+            state = state>>1;                    //bit shift our state
+            cindex++;
+            }
+
+        state = P3IN;                   //get status of port one
+        for(lcounter<8,lcounter++){
+            pinHandler(cindex,state&&0x01);
+            state = state>>1;                    //bit shift our state
+            cindex++;
+            }
+
+        state = P4IN;                   //get status of port one
+        for(lcounter<8,lcounter++){
+            pinHandler(cindex,state&&0x01);
+            state = state>>1;                    //bit shift our state
+            cindex++;
+            }
+
+        state = P5IN;                   //get status of port one
+        for(lcounter<8,lcounter++){
+            pinHandler(cindex,state&&0x01);
+            state = state>>1;                    //bit shift our state
+            cindex++;
+            }
+
+        state = P6IN;                   //get status of port one
+        for(lcounter<8,lcounter++){
+            pinHandler(cindex,state&&0x01);
+            state = state>>1;                    //bit shift our state
+            cindex++;
+            }
+
+        state = P7IN;                   //get status of port one
+        for(lcounter<8,lcounter++){
+            pinHandler(cindex,state&&0x01);
+            state = state>>1;                    //bit shift our state
+            cindex++;
+            }
+
+        state = P8IN;                   //get status of port one
+        for(lcounter<8,lcounter++){
+            pinHandler(cindex,state&&0x01);
+            state = state>>1;                    //bit shift our state
+            cindex++;
+            }
+
+        state = P9IN;                   //get status of port one
+        for(lcounter<8,lcounter++){
+            pinHandler(cindex,state&&0x01);
+            state = state>>1;                    //bit shift our state
+            cindex++;
+            }
+	  }
 }
