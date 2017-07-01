@@ -155,28 +155,28 @@ void main(void)
 
 void pinHandler(char keyIndex, char keyState)
 {
-    switch(keyIndex)
+    switch(keyStates[keyIndex])
     {
         case 0:
             if(keyState == 0)
             {
-                keyIndex = 1;
+                keyStates[keyIndex] = 1;
                 //UARTSendOn todo
             }
 
             else
-                keyIndex = 0;
+                keyStates[keyIndex] = 0;
             break;
 
         default:
             if(keyState == 1)
-                keyIndex++;
+                keyStates[keyIndex]++;
             else
-                keyIndex = 1;
+                keyStates[keyIndex] = 1;
 
-            if(keyIndex > LOOP_COUNT_TIMEOUT)
+            if(keyStates[keyIndex] > LOOP_COUNT_TIMEOUT)
             {
-                keyIndex = 0;
+                keyStates[keyIndex] = 0;
                 //UARTSendOFF
             }
             break;
