@@ -68,10 +68,9 @@ const char MIDINote[NUM_PORTS*8] = {0}; //todo
 // uint8_t tout[NumOfKeys] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 // uint8_t MIDI[NumOfKeys];                                   //all of these arrays initalized to zero
 //
-//volatile char *On;
-//volatile char *Off;
+volatile char *On;
+volatile char *Off;
 char MIDILength = 3;
-char cindex = 0;                     //index into state array
 volatile char MIDINoteOn[3] = {0x90, 0x3c, 0x00};
 volatile char MIDINoteOff[3] = {0x80, 0x3c, 127};
 
@@ -114,7 +113,7 @@ void main(void)
     char i;
     char state;
 	while(1){
-
+	    char cindex = 0;                 //index into state array
 	    state = P1IN;                   //get status of port one
 	    for(i = 0;i<8;i++){
 	        pinHandler(cindex,state&&0x01);
@@ -188,6 +187,10 @@ void pinHandler(char keyIndex, char keyState)
             if(keyState == 0)
             {
                 keyStates[keyIndex] = 1;
+                MIDINoteOn[2] = 90;                           //replace Note on buffer with proper velocity
+                MIDINoteOn[1] = MIDINote[keyIndex];                      //map proper MIDI note value to MIDI array
+                On = MIDINoteOn;                                        //pointer initialization
+                UARTSendArray(On,MIDILength);                       //Send MIDI note!
                 //UARTSendOn todo
             }
 
@@ -204,6 +207,9 @@ void pinHandler(char keyIndex, char keyState)
             if(keyStates[keyIndex] > LOOP_COUNT_TIMEOUT)
             {
                 keyStates[keyIndex] = 0;
+                MIDINoteOff[1] = MIDINote[keyIndex];
+                Off = MIDINoteOff;
+                UARTSendArray(Off,MIDILength);              //send NoteOFF message
                 //UARTSendOFF
             }
             break;
