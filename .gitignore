@@ -52,4 +52,4 @@ Mkfile.old
 dkms.conf
 /workspace_v6_2/.jxbrowser-data/*
 /workspace_v6_2/.metadata/*
-#workspace_v6_2/.metadata/
+/workspace_v6_2/.metadata/
