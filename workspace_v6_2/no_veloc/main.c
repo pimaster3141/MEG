@@ -5,12 +5,15 @@
 //****************************************************************************
 
 #include "msp.h"
+
+/*
 #include "string.h"
 #include "driverlib.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include "UART.h"
 #include "math.h"
+*/
 
 /*
 uint8_t flag = 1;
@@ -18,7 +21,7 @@ uint8_t MIDI = 0;
 uint16_t T1 = 0;
 uint16_t T2 = 0;
 uint16_t velocity = 0;
-*/
+
 #define P6_0 0
 #define P3_2 1
 #define P6_1 2
@@ -45,17 +48,27 @@ uint16_t velocity = 0;
 #define P5_2 22
 #define P3_7 23
 #define P3_6 24
+*/
 
 #define NumOfKeys 25
-uint8_t a = 0;                          //key offset
-static volatile uint8_t Pin2MIDI[NumOfKeys] = {48, 49, 50, 51, 52, 53, 54, 55, 56, 57,               //Map Pin diagram to Key notes
-                                                58,59,60,61,62,63,64,65,66,67,68,69,70,71,72};
-volatile uint8_t flag[NumOfKeys] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-volatile uint8_t tout[NumOfKeys] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-volatile uint8_t MIDI[NumOfKeys];                                   //all of these arrays initalized to zero
+#define NUM_PORTS 9
 
-volatile char *On;
-volatile char *Off;
+#define LOOP_COUNT_TIMEOUT 5
+
+char keyStates[NUM_PORTS*8] = {0};
+const char MIDINote[NUM_PORTS*8] = {0} //todo
+
+
+
+//uint8_t a = 0;                          //key offset
+//static  uint8_t Pin2MIDI[NumOfKeys] = {48, 49, 50, 51, 52, 53, 54, 55, 56, 57,               //Map Pin diagram to Key notes
+//                                                58,59,60,61,62,63,64,65,66,67,68,69,70,71,72};
+// uint8_t flag[NumOfKeys] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+// uint8_t tout[NumOfKeys] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+// uint8_t MIDI[NumOfKeys];                                   //all of these arrays initalized to zero
+//
+//volatile char *On;
+//volatile char *Off;
 char MIDILength = 3;
 volatile char MIDINoteOn[3] = {0x90, 0x3c, 0x00};
 volatile char MIDINoteOff[3] = {0x80, 0x3c, 127};
@@ -68,3 +81,35 @@ void main(void)
 
 	// test comment
 }
+
+void pinHandler(char keyIndex, char keyState)
+{
+    switch(keyIndex)
+    {
+        case 0:
+            if(keyState == 0)
+            {
+                keyIndex = 1;
+                //UARTSendOn todo
+            }
+
+            else
+                keyIndex = 0
+            break;
+
+        default:
+            if(keyState == 1)
+                keyIndex++;
+            else
+                keyIndex = 1;
+
+            if(keyIndex > LOOP_COUNT_TIMEOUT)
+            {
+                keyIndex = 0;
+                //UARTSendOFF
+            }
+            break;
+    }
+}
+
+
