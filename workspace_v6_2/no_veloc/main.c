@@ -53,23 +53,24 @@ uint16_t velocity = 0;
 
 #define NumOfKeys 25
 #define NUM_PORTS 9
+#define KEY_OFFSET 48
+#define KN 255 //null key
 
 #define LOOP_COUNT_TIMEOUT 5
 
-char keyStates[NUM_PORTS*8] = {0};
-const char MIDINote[NUM_PORTS*8] = {0}; //todo
+char keyStates[NUM_PORTS*8] = {};
+const char MIDINote[NUM_PORTS*8] = {
+	KN,	KN,	KN,	KN,	KN,	KN,	10,	KN,		//Port1
+	KN,	KN,	KN,	KN,	4,	3,	2,	1,		//Port2
+	5,	KN,	KN,	KN,	KN,	KN,	KN,	KN,		//Port3
+	KN,	KN,	KN,	KN,	KN,	KN,	KN,	KN,		//Port4
+	KN,	KN,	16,	KN,	KN,	KN,	6,	7,		//Port5
+	KN,	15,	KN,	12,	KN,	KN,	8,	9,		//Port6
+	KN,	11,	KN,	13,	KN,	KN,	KN,	KN,		//Port7
+	KN,	KN,	19,	18,	21,	25,	24,	22,		//Port8
+	23,	20,	17,	14,	KN,	KN,	KN,	KN 		//Port9
+};
 
-
-
-//uint8_t a = 0;                          //key offset
-//static  uint8_t Pin2MIDI[NumOfKeys] = {48, 49, 50, 51, 52, 53, 54, 55, 56, 57,               //Map Pin diagram to Key notes
-//                                                58,59,60,61,62,63,64,65,66,67,68,69,70,71,72};
-// uint8_t flag[NumOfKeys] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-// uint8_t tout[NumOfKeys] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-// uint8_t MIDI[NumOfKeys];                                   //all of these arrays initalized to zero
-//
-//volatile char *On;
-//volatile char *Off;
 char MIDILength = 3;
 char cindex = 0;                     //index into state array
 volatile char MIDINoteOn[3] = {0x90, 0x3c, 0x00};
