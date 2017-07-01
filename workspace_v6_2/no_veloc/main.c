@@ -78,11 +78,38 @@ volatile char MIDINoteOff[3] = {0x80, 0x3c, 127};
 void pinHandler(char keyIndex, char keyState);
 
 
+void UARTset (void){
+
+    // Setup UART
+    UARTSetup();
+
+
+    SCB->SCR &= ~SCB_SCR_SLEEPONEXIT_Msk;   // Wake up on exit from ISR
+
+    // Enable eUSCIA3 interrupt in NVIC module
+    NVIC->ISER[0] = 1 << ((EUSCIA3_IRQn) & 31);
+}
+
 
 
 void main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;           // Stop watchdog timer
+
+    CS->KEY = 0x0000695A;                           //unlock all the registers to be able to access
+
+    /*Following are primary registers for necessary clock functions*/
+
+    CS->CTL0 = 0x00810000;
+
+    CS->CTL1 = 0x50300033;
+
+    CS->CLKEN = 0x0000000E;
+
+    CS->KEY = 0x00010000;                   //lock all clock registers
+
+    /*Configure UART MODULE*/
+    UARTset();
 
     char i;
     char state;
