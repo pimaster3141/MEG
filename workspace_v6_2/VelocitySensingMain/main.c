@@ -11,6 +11,7 @@
 
 /* ---------------------- HARDWARE DEFINES ---------------------- */
 #define NUM_PORTS 9
+#define NUM_KEYS 25
 #define KEY_OFFSET 47
 //#define KEY_OFFSET 0
 #define KN 0 //null key
@@ -33,7 +34,7 @@
 static volatile uint16_t keyTimes[NUM_PORTS*8] = {};
 
 // data structure to hold if MIDI has been sent out
-static volatile char MIDISent[NUM_PORTS*8] = {};
+static volatile char MIDISent[NUM_KEYS] = {};
 
 // data structure to hold key mappings
 const char MIDINote[NUM_PORTS*8] =
@@ -82,11 +83,12 @@ void keyRelease(char port, char portData)
     for(bit = 0; bit < 8; bit++)
     {
         char keyIndex = (port - 1)*8 + bit;
-        if((MIDINote[keyIndex] & BIT7)  && MIDISent[keyIndex] && (portData & (mask << bit)))
+        char key = MIDINote[keyIndex];               //get key value from keymapping
+        if((MIDINote[keyIndex] & BIT7)  && MIDISent[key & ~(BIT7)] && (portData & (mask << bit)))
         {
             MIDIOff(MIDINote[keyIndex] & ~(BIT7));
             keyTimes[keyIndex] = 0;
-            MIDISent[keyIndex] = 0;
+            MIDISent[key & ~(BIT7)] = 0;
         }
     }
 }
@@ -203,7 +205,7 @@ void pinHandler(char portIndex, char pinIndex, char fallingEdge)
     char keyIndex = (portIndex-1)*8 + pinIndex;  //generate key lookup index
     char key = MIDINote[keyIndex];               //get key value from keymapping
 
-    if(!MIDISent[keyIndex])
+    if(!MIDISent[key & ~(BIT7)])
     {
         uint16_t newTime = TA1R;        //get current timer time;
         uint16_t oldTime = keyTimes[keyIndex];
@@ -212,7 +214,7 @@ void pinHandler(char portIndex, char pinIndex, char fallingEdge)
             uint16_t deltaTime = newTime - oldTime; //calculate velocity
             char deltaVelocity = convertVelocity(deltaTime);
             MIDIOn((key & ~(BIT7)), deltaVelocity);        //Play Note
-            MIDISent[keyIndex] = 1;
+            MIDISent[key & ~(BIT7)] = 1;
         }
         else                        // low comparator falling (start timer)
         {
@@ -233,6 +235,7 @@ void pinHandler(char portIndex, char pinIndex, char fallingEdge)
  */
 char convertVelocity(uint16_t deltaTime)
 {
+    printf("Delta = %u \n", deltaTime);
 
     if (deltaTime > 15000){                               //cap off to go in our range
             deltaTime = 15000;
@@ -268,10 +271,10 @@ char convertVelocity(uint16_t deltaTime)
  */
 void MIDIOn(char pitch, char volume)
 {
-    P10OUT |= BIT0;
+    P10OUT = pitch | BIT5;
     char payload[3] = {MIDI_ON, pitch + KEY_OFFSET, volume};
     UARTSendArray(payload, 3);
-    P10OUT &= ~BIT0;
+    P10OUT = 0;
 //    __no_operation();
 }
 
@@ -281,8 +284,10 @@ void MIDIOn(char pitch, char volume)
  */
 void MIDIOff(char pitch)
 {
+    P10OUT = pitch;
     char payload[3] = {MIDI_OFF, pitch + KEY_OFFSET, 0};
     UARTSendArray(payload, 3);
+    P10OUT = 0;
 //    __no_operation();
 }
 /* ---------------------- END KEY OUTPUT CODE ---------------------- */
