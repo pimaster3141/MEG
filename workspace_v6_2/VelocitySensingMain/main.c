@@ -10,7 +10,8 @@
 /* ---------------------- HARDWARE DEFINES ---------------------- */
 #define NUM_PORTS 9
 #define KEY_OFFSET 47
-#define KN 255 //null key
+#define KN 0 //null key
+#define KO 128 //high comparator offset
 #define MIDI_ON 0x90
 #define MIDI_OFF 0x80
 /* ---------------------- END HARDWARE DEFINES ---------------------- */
@@ -19,22 +20,22 @@
 
 /* ---------------------- KEYMAPPING AND KEYSTATES ---------------------- */
 // data structure to hold key timing values
-char keyStates[NUM_PORTS*8] = {};
+uint32_t keyTimes[NUM_PORTS*8] = {};
 
 // data structure to hold key mappings
 const char MIDINote[NUM_PORTS*8] =
-{
-    KN, KN, KN, KN, KN, KN, 10, KN,     //Port1
-    KN, KN, KN, KN, 4,  3,  2,  1,      //Port2
-    5,  KN, KN, KN, KN, KN, KN, KN,     //Port3
-    KN, KN, KN, KN, KN, KN, KN, KN,     //Port4
-    KN, KN, KN, 16, KN, KN, 6,  7,      //Port5
-    KN, KN, 15, 12, KN, KN, 8,  9,      //Port6
-    KN, 11, KN, 13, KN, KN, KN, KN,     //Port7
-    KN, KN, 19, 18, 21, 25, 24, 22,     //Port8
-    23, 20, 17, 14, KN, KN, KN, KN      //Port9
+{//  0      1      2      3      4      5      6      7     //BIT
+    KN   , KN   , 2    , KN   , KN   , 10   , KO+10, 19   ,     //Port1
+    KN   , KN   , KN   , 18   , K0+4 , KO+3 , KO+2 , KO+1 ,     //Port2
+    KO+5 , KN   , KN   , 4    , KN   , 22   , 25   , 24   ,     //Port3
+    5    , 6    , 7    , 8    , 9    , 11   , 12   , 13   ,     //Port4
+    21   , 20   , 23   , KO+16, 15   , 17   , KO+6 , KO+7 ,     //Port5
+    1    , 3    , KO+15, KO+12, 16   , 14   , KO+8 , KO+9 ,     //Port6
+    KN   , K0+11, KN   , KO+13, KN   , KN   , KN   , KN   ,     //Port7
+    KN   , KN   , KO+19, KO+18, KO+21, KO+25, KO+24, KO+22,     //Port8
+    K0+23, KO+20, KO+17, KO+14, KN   , KN   , KN   , KN         //Port9
 };
-/* ---------------------- END KEYMAPPING ---------------------- */
+/* ---------------------- END KEYMAPPING AND KEYSTATES---------------------- */
 
 
 
@@ -61,6 +62,7 @@ void setup(void)
 {
     UARTSet();  //Init UART device and ISR
     BNCSet();   //Init BNC devices and ISR(?)
+    TimerSet();
     ISRSet();   //Init Key device and ISR
     return;
 }
@@ -80,6 +82,12 @@ void BNCSet(void)
     return;
 }
 
+// Sets up the timer for key velocity
+void ISRSet(void)
+{
+    return;
+}
+
 // Sets up comparator interrupts and associated ISR in NVIC for all ports/keys
 void ISRSet(void)
 {
@@ -93,40 +101,46 @@ void ISRSet(void)
 /* ---------------------- KEY OUTPUT CODE ---------------------- */
 /* Unified key action function call TODO: copied from non velocity - may need editing
  * @param
- *  char keyIndex - index of key [1-25]
- *  char keyState - TODO: something needs to be changed here...
+ *  char portIndex - port of event [1-9]
+ *  char pinIndex - pin of event [0-7]
+ *  char risingEdge - rising or falling edge event [0, 1]
  */
-void pinHandler(char keyIndex, char keyState)
+void pinHandler(char portIndex, char pinIndex, char risingEdge)
 {
-    switch(keyStates[keyIndex])
+    char keyIndex = (portIndex-1)*8 + pinIndex;  //generate key lookup index
+    char key = MIDINote[keyIndex];               //get key value from keymapping
+
+    if(key & BIT7)              //rising high comparator
+        MIDIOff(key & ~(BIT7));
+
+    else
     {
-        case 0:
-            if(keyState == 0)
-            {
-                __no_operation();
-                keyStates[keyIndex] = 1;
-                if(MIDINote[keyIndex] != KN)
-                    MIDIOn(MIDINote[keyIndex], 127);
-            }
+        uint32_t newTime = ;        //Todo: get current timer time;
 
-            else
-                keyStates[keyIndex] = 0;
-            break;
-
-        default:
-            if(keyState == 1)
-                keyStates[keyIndex]++;
-            else
-                keyStates[keyIndex] = 1;
-
-            if(keyStates[keyIndex] > LOOP_COUNT_TIMEOUT)
-            {
-                keyStates[keyIndex] = 0;
-                if(MIDINote[keyIndex] != KN)
-                    MIDIOff(MIDINote[keyIndex]);
-            }
-            break;
+        if(risingEdge)              //low comparator rising (play note)
+        {
+            uint32_t oldTime = keyTimes[keyIndex];
+            uint32_t deltaTime = newTime - oldTime; //calculate velocity
+            char velocity = convertVelocity(deltaTime);
+            MIDIOn((key & ~(BIT7)), velocity);        //Play Note
+        }
+        else                        // low comparator falling (start timer)
+        {
+            keyTimes[keyIndex] = newTime;          // update key time
+        }
     }
+}
+
+/* Converts a time delta to velocity
+ * @param
+ *  uint32_t deltaTime - 32bit unsigned timer value
+ * @return
+ *  char - velocity value [0-127]
+ */
+char convertVelocity(uint32_t deltaTime)
+{
+    // TODO:
+    return 127;
 }
 
 /* Inits a note on MIDI
@@ -153,3 +167,18 @@ void MIDIOff(char pitch)
 //    __no_operation();
 }
 /* ---------------------- END KEY OUTPUT CODE ---------------------- */
+
+
+/* ---------------------- KEY ISR HANDLERS ---------------------- */
+
+
+void PORT6_IRQHandler(void)
+{
+
+    uint16_t status = P6IV >> 1;                             //find out which interrupt triggered the interrupt
+                                                             //interrupt also gets cleared by reading PxIV
+
+    pinHandler(6, status >> 1, )
+
+
+}
