@@ -166,11 +166,6 @@ void pinHandler(char keyIndex, char keyState)
             {
                 __no_operation();
                 keyStates[keyIndex] = 1;
-                // MIDINoteOn[2] = 90;                           //replace Note on buffer with proper velocity
-                // MIDINoteOn[1] = MIDINote[keyIndex];                      //map proper MIDI note value to MIDI array
-                // On = MIDINoteOn;                                        //pointer initialization
-                // UARTSendArray(On,MIDILength);                       //Send MIDI note!
-                // //UARTSendOn todo
                 if(MIDINote[keyIndex] != KN)
                 	MIDIOn(MIDINote[keyIndex], 127);
             }
@@ -188,10 +183,6 @@ void pinHandler(char keyIndex, char keyState)
             if(keyStates[keyIndex] > LOOP_COUNT_TIMEOUT)
             {
                 keyStates[keyIndex] = 0;
-                // MIDINoteOff[1] = MIDINote[keyIndex];
-                // Off = MIDINoteOff;
-                // UARTSendArray(Off,MIDILength);              //send NoteOFF message
-                // //UARTSendOFF
                 if(MIDINote[keyIndex] != KN)
                 	MIDIOff(MIDINote[keyIndex]);
             }
