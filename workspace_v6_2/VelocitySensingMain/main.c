@@ -1,6 +1,8 @@
 
 /* DriverLib Includes */
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
+#include "msp432p401r.h"
+#include "UART.h"
 
 /* Standard Includes */
 #include <stdint.h>
@@ -10,24 +12,34 @@
 /* ---------------------- HARDWARE DEFINES ---------------------- */
 #define NUM_PORTS 9
 #define KEY_OFFSET 47
+//#define KEY_OFFSET 0
 #define KN 0 //null key
 #define KO 128 //high comparator offset
 #define MIDI_ON 0x90
 #define MIDI_OFF 0x80
+
+#define P1_LOW 0xA0
+#define P2_LOW 0x08
+#define P3_LOW 0xEC
+#define P4_LOW 0xFF
+#define P5_LOW 0x37
+#define P6_LOW 0x33
 /* ---------------------- END HARDWARE DEFINES ---------------------- */
 
 
 
 /* ---------------------- KEYMAPPING AND KEYSTATES ---------------------- */
 // data structure to hold key timing values
-uint32_t keyTimes[NUM_PORTS*8] = {};
+volatile uint16_t keyTimes[NUM_PORTS*8] = {};
+
+//
 
 // data structure to hold key mappings
 const char MIDINote[NUM_PORTS*8] =
 {//  0      1      2      3      4      5      6      7     //BIT
-    KN   , KN   , 2    , KN   , KN   , 10   , KO+10, 19   ,     //Port1
+    KN   , KN   , KN   , KN   , KN   , 10   , KO+10, 19   ,     //Port1
     KN   , KN   , KN   , 18   , KO+4 , KO+3 , KO+2 , KO+1 ,     //Port2
-    KO+5 , KN   , KN   , 4    , KN   , 22   , 25   , 24   ,     //Port3
+    KO+5 , KN   , 2    , 4    , KN   , 22   , 25   , 24   ,     //Port3
     5    , 6    , 7    , 8    , 9    , 11   , 12   , 13   ,     //Port4
     21   , 20   , 23   , KO+16, 15   , 17   , KO+6 , KO+7 ,     //Port5
     1    , 3    , KO+15, KO+12, 16   , 14   , KO+8 , KO+9 ,     //Port6
@@ -50,7 +62,30 @@ int main(void)
 
     while(1)
     {
-        
+        keyRelease(1, P1IN);
+        keyRelease(2, P2IN);
+        keyRelease(3, P3IN);
+        keyRelease(4, P4IN);
+        keyRelease(5, P5IN);
+        keyRelease(6, P6IN);
+        keyRelease(7, P7IN);
+        keyRelease(8, P8IN);
+        keyRelease(9, P9IN);
+    }
+}
+
+void keyRelease(char port, char portData)
+{
+    char mask = 0x01;
+    char bit;
+    for(bit = 0; bit < 8; bit++)
+    {
+        char keyIndex = (port - 1)*8 + bit;
+        if((MIDINote[keyIndex] & BIT7)  && (keyTimes[keyIndex]) && (portData & (mask << bit)))
+        {
+            MIDIOff(MIDINote[keyIndex] & ~(BIT7));
+            keyTimes[keyIndex] = 0;
+        }
     }
 }
 
@@ -91,7 +126,7 @@ void UARTSet (void)
 {
     UARTSetup();    // Setup UART Hardware
     SCB->SCR &= ~SCB_SCR_SLEEPONEXIT_Msk;   // Wake up on exit from ISR
-    NVIC->ISER[0] = 1 << ((EUSCIA2_IRQn) & 31); // Enable eUSCIA2 interrupt in NVIC module
+    NVIC->ISER[0] = 1 << ((EUSCIA3_IRQn) & 31); // Enable eUSCIA2 interrupt in NVIC module
     return;
 }
 
@@ -102,80 +137,51 @@ void BNCSet(void)
     return;
 }
 
-// Sets up the timer for key velocity
+// Sets up the timer for key deltaVelocity
 void TimerSet(void)
 {
-
 /*Configure necessary timer registers for our timer frequency*/
     TA1CTL = 0x0220;
     TA1EX0 = 0x0000;            //use this to further divide our clock
-
     return;
 }
 
 // Sets up comparator interrupts and associated ISR in NVIC for all ports/keys
 void ISRSet(void)
 {
-
     /*Port 1*/
-    P1IE = 0xFF;
+    P1IE = (P1_LOW);
     MAP_Interrupt_enableInterrupt(INT_PORT1);
-
-    P1IES = 0xFF;           //high to low transition
+    P1IES |= P1_LOW;                  //high to low transition
 
     /*Port 2*/
-    P2IE = 0xFF;            //enable all interrupts
+    P2IE |= (P2_LOW);                             //enable all interrupts
     MAP_Interrupt_enableInterrupt(INT_PORT2);
-
-    P2IES = 0xFF;
+    P2IES |= P2_LOW;
 
     /*Port 3*/
-    P3IE = 0xFF;            //enable all interrupts
+    P3IE |= P3_LOW;        //enable all interrupts
     MAP_Interrupt_enableInterrupt(INT_PORT3);
-
-    P3IES = 0xFF;
+    P3IES |= P3_LOW;
 
     /*Port 4*/
-    P4IE = 0xFF;            //enable all interrupts
+    P4IE |= P4_LOW;                               //enable all interrupts
     MAP_Interrupt_enableInterrupt(INT_PORT4);
-
-    P4IES = 0xFF;
+    P4IES |= P4_LOW;
 
     /*Port 5*/
-    P5IE = 0xFF;            //enable all interrupts
+    P5IE |= P5_LOW; //enable all interrupts
     MAP_Interrupt_enableInterrupt(INT_PORT5);
-
-    P5IES = 0xFF;
+    P5IES |= P5_LOW;
 
     /*Port 6*/
-    P6IE = 0xFF;            //enable all interrupts
+    P6IE |= P6_LOW;        //enable all interrupts
     MAP_Interrupt_enableInterrupt(INT_PORT6);
-
-    P6IES = 0xFF;
-
-    /*Port 7*/
-    P7IE = 0xFF;            //enable all interrupts
-    MAP_Interrupt_enableInterrupt(INT_PORT7);
-
-    P7IES = 0xFF;
-
-    /*Port 8*/
-    P8IE = 0xFF;            //enable all interrupts
-    MAP_Interrupt_enableInterrupt(INT_PORT8);
-
-    P8IES = 0xFF;
-
-    /*Port 9*/
-    P9IE = 0x3F;            //enable interrupts, except 9.7, 9.6
-    MAP_Interrupt_enableInterrupt(INT_PORT9);
-
-    P9IES = 0x3F;
+    P6IES |= P6_LOW;
 
     /*enable all interrupts to processor*/
     MAP_Interrupt_enableMaster();
-
     __enable_irq();
-
     return;
 }
 /* ---------------------- END SETUP CODE ---------------------- */
@@ -195,28 +201,28 @@ void pinHandler(char portIndex, char pinIndex, char fallingEdge)
     char keyIndex = (portIndex-1)*8 + pinIndex;  //generate key lookup index
     char key = MIDINote[keyIndex];               //get key value from keymapping
 
-    if((key & BIT7) && !fallingEdge)              //rising high comparator
-        MIDIOff(key & ~(BIT7));
-
-    else
+    if(!keyTimes[keyIndex])
     {
-        uint16_t newTime = ;        //Todo: get current timer time;
-
-        if(!fallingEdge)              //low comparator rising (play note)
+        uint16_t newTime = TA1R;        //get current timer time;
+        uint16_t oldTime = keyTimes[keyIndex];
+        if(!fallingEdge)              //low comparator rising, first edge
         {
-            uint16_t oldTime = keyTimes[keyIndex];
             uint16_t deltaTime = newTime - oldTime; //calculate velocity
-            char velocity = convertVelocity(deltaTime);
-            MIDIOn((key & ~(BIT7)), velocity);        //Play Note
+            char deltaVelocity = convertVelocity(deltaTime);
+            MIDIOn((key & ~(BIT7)), deltaVelocity);        //Play Note
         }
         else                        // low comparator falling (start timer)
         {
             keyTimes[keyIndex] = newTime;          // update key time
         }
     }
+    else
+    {
+        __no_operation();
+    }
 }
 
-/* Converts a time delta to velocity
+/* Converts a time delta to Velocity
  * @param
  *  uint32_t deltaTime - 32bit unsigned timer value
  * @return
@@ -224,17 +230,16 @@ void pinHandler(char portIndex, char pinIndex, char fallingEdge)
  */
 char convertVelocity(uint16_t deltaTime)
 {
-    // TODO:
 
-    if (vel > 15000){                               //cap off to go in our range
-            vel = 15000;
+    if (deltaTime > 15000){                               //cap off to go in our range
+            deltaTime = 15000;
                 }
 
-        if (vel < 1100 & (vel != 5)){
-            vel = 1100;
+        if (deltaTime < 1100 & (deltaTime != 5)){
+            deltaTime = 1100;
                 }
 
-        float temp = vel;
+        float temp = deltaTime;
         temp = ((temp-1100)/(13000))*127.0;                     //divide into our range (1-127)
 
         uint8_t vol = temp;                             //get integer value
@@ -260,8 +265,10 @@ char convertVelocity(uint16_t deltaTime)
  */
 void MIDIOn(char pitch, char volume)
 {
+    P10OUT |= BIT0;
     char payload[3] = {MIDI_ON, pitch + KEY_OFFSET, volume};
     UARTSendArray(payload, 3);
+    P10OUT &= ~BIT0;
 //    __no_operation();
 }
 
@@ -286,29 +293,29 @@ void PORT1_IRQHandler(void)
                                                              //returns value [0-7]
     char mask = 0x01 << pin;
     char fallingEdge = (P1IES & mask);
-    P1IES ^= mask;
+    P1IES = (P1IES & ~mask) | (P1IN & mask);
 
     pinHandler(1, pin, fallingEdge);
 }
 
 void PORT2_IRQHandler(void)
 {
-    uint16_t pin = (P1IV >> 2) - 1;                          //find out which interrupt triggered the interrupt
+    uint16_t pin = (P2IV >> 1) - 1;                          //find out which interrupt triggered the interrupt
                                                              //returns value [0-7]
     char mask = 0x01 << pin;
     char fallingEdge = (P2IES & mask);
-    P2IES ^= mask;
+    P2IES = (P2IES & ~mask) | (P2IN & mask);
 
     pinHandler(2, pin, fallingEdge);
 }
 
 void PORT3_IRQHandler(void)
 {
-    uint16_t pin = (P1IV >> 3) - 1;                          //find out which interrupt triggered the interrupt
+    uint16_t pin = (P3IV >> 1) - 1;                          //find out which interrupt triggered the interrupt
                                                              //returns value [0-7]
     char mask = 0x01 << pin;
     char fallingEdge = (P3IES & mask);
-    P3IES ^= mask;
+    P3IES = (P3IES & ~mask) | (P3IN & mask);
 
     pinHandler(3, pin, fallingEdge);
 }
@@ -319,7 +326,7 @@ void PORT4_IRQHandler(void)
                                                              //returns value [0-7]
     char mask = 0x01 << pin;
     char fallingEdge = (P4IES & mask);
-    P4IES ^= mask;
+    P4IES = (P4IES & ~mask) | (P4IN & mask);
 
     pinHandler(4, pin, fallingEdge);
 }
@@ -330,7 +337,7 @@ void PORT5_IRQHandler(void)
                                                              //returns value [0-7]
     char mask = 0x01 << pin;
     char fallingEdge = (P5IES & mask);
-    P5IES ^= mask;
+    P5IES = (P5IES & ~mask) | (P5IN & mask);
 
     pinHandler(5, pin, fallingEdge);
 }
@@ -341,41 +348,8 @@ void PORT6_IRQHandler(void)
                                                              //returns value [0-7]
     char mask = 0x01 << pin;
     char fallingEdge = (P6IES & mask);
-    P6IES ^= mask;
+    P6IES = (P6IES & ~mask) | (P6IN & mask);
 
     pinHandler(6, pin, fallingEdge);
-}
-
-void PORT7_IRQHandler(void)
-{
-    uint16_t pin = (P7IV >> 1) - 1;                          //find out which interrupt triggered the interrupt
-                                                             //returns value [0-7]
-    char mask = 0x01 << pin;
-    char fallingEdge = (P7IES & mask);
-    P7IES ^= mask;
-
-    pinHandler(7, pin, fallingEdge);
-}
-
-void PORT8_IRQHandler(void)
-{
-    uint16_t pin = (P8IV >> 1) - 1;                          //find out which interrupt triggered the interrupt
-                                                             //returns value [0-7]
-    char mask = 0x01 << pin;
-    char fallingEdge = (P8IES & mask);
-    P8IES ^= mask;
-
-    pinHandler(8, pin, fallingEdge);
-}
-
-void PORT9_IRQHandler(void)
-{
-    uint16_t pin = (P9IV >> 1) - 1;                          //find out which interrupt triggered the interrupt
-                                                             //returns value [0-7]
-    char mask = 0x01 << pin;
-    char fallingEdge = (P9IES & mask);
-    P9IES ^= mask;
-
-    pinHandler(9, pin, fallingEdge);
 }
 /* ---------------------- END KEY ISR HANDLERS ---------------------- */

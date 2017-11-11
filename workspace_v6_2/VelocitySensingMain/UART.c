@@ -6,7 +6,7 @@
  *  Implement software buffer
  */
 
-#include <msp.h>
+#include "msp432p401r.h"
 #include "UART.h"
 #include "BNC.h"
 
@@ -40,7 +40,7 @@ void UARTSetup(void)
 	// UCA2IE |= UCRXIE | UCTXIE;				// Enable interrupts both transmission and reception
 
 	EUSCI_A3->CTLW0 &= ~EUSCI_A_CTLW0_SWRST;// Initialize eUSCI
-	EUSCI_A3->IE |= EUSCI_A_IE_RXIE;        // Enable USCI_A2 RX interrupt
+//	EUSCI_A3->IE |= EUSCI_A_IE_RXIE;        // Enable USCI_A2 RX interrupt
 	EUSCI_A3->IE |= EUSCI_A_IE_TXIE;        // Enable USCI_A2 TX interrupt
 
 	//printf("Init UART.\n");
