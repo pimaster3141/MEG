@@ -60,11 +60,30 @@ int main(void)
 // Sets up the board
 void setup(void)
 {
+    SysSet();
+    TimerSet();
     UARTSet();  //Init UART device and ISR
     BNCSet();   //Init BNC devices and ISR(?)
-    TimerSet();
     ISRSet();   //Init Key device and ISR
     return;
+}
+
+
+void SysSet(void)
+{
+
+    /*unlock all the registers to be able to access*/
+
+        CS->KEY = 0x0000695A;
+
+    /*Following are primary registers for necessary clock functions*/
+
+        CS->CTL0 = 0x00810000;
+        CS->CTL1 = 0x50300033;
+        CS->CLKEN = 0x0000000E;
+        CS->KEY = 0x00010000;        //lock all clock registers
+
+
 }
 
 // Sets Up UART and associated ISR in NVIC
@@ -79,18 +98,84 @@ void UARTSet (void)
 // Sets Up BNC and associated ISR if needed
 void BNCSet(void)
 {
+    P10DIR = 0x3F;              //set outputs for BNC
     return;
 }
 
 // Sets up the timer for key velocity
-void ISRSet(void)
+void TimerSet(void)
 {
+
+/*Configure necessary timer registers for our timer frequency*/
+    TA1CTL = 0x0220;
+    TA1EX0 = 0x0000;            //use this to further divide our clock
+
     return;
 }
 
 // Sets up comparator interrupts and associated ISR in NVIC for all ports/keys
 void ISRSet(void)
 {
+
+    /*Port 1*/
+    P1IE = 0xFF;
+    MAP_Interrupt_enableInterrupt(INT_PORT1);
+
+    P1IES = 0xFF;           //high to low transition
+
+    /*Port 2*/
+    P2IE = 0xFF;            //enable all interrupts
+    MAP_Interrupt_enableInterrupt(INT_PORT2);
+
+    P2IES = 0xFF;
+
+    /*Port 3*/
+    P3IE = 0xFF;            //enable all interrupts
+    MAP_Interrupt_enableInterrupt(INT_PORT3);
+
+    P3IES = 0xFF;
+
+    /*Port 4*/
+    P4IE = 0xFF;            //enable all interrupts
+    MAP_Interrupt_enableInterrupt(INT_PORT4);
+
+    P4IES = 0xFF;
+
+    /*Port 5*/
+    P5IE = 0xFF;            //enable all interrupts
+    MAP_Interrupt_enableInterrupt(INT_PORT5);
+
+    P5IES = 0xFF;
+
+    /*Port 6*/
+    P6IE = 0xFF;            //enable all interrupts
+    MAP_Interrupt_enableInterrupt(INT_PORT6);
+
+    P6IES = 0xFF;
+
+    /*Port 7*/
+    P7IE = 0xFF;            //enable all interrupts
+    MAP_Interrupt_enableInterrupt(INT_PORT7);
+
+    P7IES = 0xFF;
+
+    /*Port 8*/
+    P8IE = 0xFF;            //enable all interrupts
+    MAP_Interrupt_enableInterrupt(INT_PORT8);
+
+    P8IES = 0xFF;
+
+    /*Port 9*/
+    P9IE = 0x3F;            //enable interrupts, except 9.7, 9.6
+    MAP_Interrupt_enableInterrupt(INT_PORT9);
+
+    P9IES = 0x3F;
+
+    /*enable all interrupts to processor*/
+    MAP_Interrupt_enableMaster();
+
+    __enable_irq();
+
     return;
 }
 /* ---------------------- END SETUP CODE ---------------------- */
@@ -115,12 +200,12 @@ void pinHandler(char portIndex, char pinIndex, char risingEdge)
 
     else
     {
-        uint32_t newTime = ;        //Todo: get current timer time;
+        uint16_t newTime = ;        //Todo: get current timer time;
 
         if(risingEdge)              //low comparator rising (play note)
         {
-            uint32_t oldTime = keyTimes[keyIndex];
-            uint32_t deltaTime = newTime - oldTime; //calculate velocity
+            uint16_t oldTime = keyTimes[keyIndex];
+            uint16_t deltaTime = newTime - oldTime; //calculate velocity
             char velocity = convertVelocity(deltaTime);
             MIDIOn((key & ~(BIT7)), velocity);        //Play Note
         }
@@ -137,9 +222,33 @@ void pinHandler(char portIndex, char pinIndex, char risingEdge)
  * @return
  *  char - velocity value [0-127]
  */
-char convertVelocity(uint32_t deltaTime)
+char convertVelocity(uint16_t deltaTime)
 {
     // TODO:
+
+    if (vel > 15000){                               //cap off to go in our range
+            vel = 15000;
+                }
+
+        if (vel < 1100 & (vel != 5)){
+            vel = 1100;
+                }
+
+        float temp = vel;
+        temp = ((temp-1100)/(13000))*127.0;                     //divide into our range (1-127)
+
+        uint8_t vol = temp;                             //get integer value
+
+        if(vol<10){
+            vol = 10;
+                }
+        if(vol > 120){
+            vol = 120;
+                }
+        uint8_t volume = 128 - vol;
+
+            return volume;
+
     return 127;
 }
 
