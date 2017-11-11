@@ -30,9 +30,10 @@
 
 /* ---------------------- KEYMAPPING AND KEYSTATES ---------------------- */
 // data structure to hold key timing values
-volatile uint16_t keyTimes[NUM_PORTS*8] = {};
+static volatile uint16_t keyTimes[NUM_PORTS*8] = {};
 
-//
+// data structure to hold if MIDI has been sent out
+static volatile char MIDISent[NUM_PORTS*8] = {};
 
 // data structure to hold key mappings
 const char MIDINote[NUM_PORTS*8] =
@@ -81,10 +82,11 @@ void keyRelease(char port, char portData)
     for(bit = 0; bit < 8; bit++)
     {
         char keyIndex = (port - 1)*8 + bit;
-        if((MIDINote[keyIndex] & BIT7)  && (keyTimes[keyIndex]) && (portData & (mask << bit)))
+        if((MIDINote[keyIndex] & BIT7)  && MIDISent[keyIndex] && (portData & (mask << bit)))
         {
             MIDIOff(MIDINote[keyIndex] & ~(BIT7));
             keyTimes[keyIndex] = 0;
+            MIDISent[keyIndex] = 0;
         }
     }
 }
@@ -201,7 +203,7 @@ void pinHandler(char portIndex, char pinIndex, char fallingEdge)
     char keyIndex = (portIndex-1)*8 + pinIndex;  //generate key lookup index
     char key = MIDINote[keyIndex];               //get key value from keymapping
 
-    if(!keyTimes[keyIndex])
+    if(!MIDISent[keyIndex])
     {
         uint16_t newTime = TA1R;        //get current timer time;
         uint16_t oldTime = keyTimes[keyIndex];
@@ -210,6 +212,7 @@ void pinHandler(char portIndex, char pinIndex, char fallingEdge)
             uint16_t deltaTime = newTime - oldTime; //calculate velocity
             char deltaVelocity = convertVelocity(deltaTime);
             MIDIOn((key & ~(BIT7)), deltaVelocity);        //Play Note
+            MIDISent[keyIndex] = 1;
         }
         else                        // low comparator falling (start timer)
         {
