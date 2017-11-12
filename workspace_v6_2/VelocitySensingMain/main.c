@@ -18,6 +18,11 @@
 #define KO 128 //high comparator offset
 #define MIDI_ON 0x90
 #define MIDI_OFF 0x80
+#define HACK_VALUE  50
+
+#define LOW_TIME 500
+#define HIGH_TIME 30000
+#define NUM_TANGENTS 5
 
 #define P1_LOW 0xA0
 #define P2_LOW 0x08
@@ -30,6 +35,10 @@
 
 
 /* ---------------------- KEYMAPPING AND KEYSTATES ---------------------- */
+const uint16_t velocityCutoffs[NUM_TANGENTS] = {0, 20860, 24982, 27417, 29152};
+const uint16_t velocitySlopes[NUM_TANGENTS] = {679, 138, 82, 58, 49};
+const char velocityIntercepts[NUM_TANGENTS] = {0, 30, 59, 88, 117};
+
 // data structure to hold key timing values
 static volatile uint16_t keyTimes[NUM_PORTS*8] = {};
 
@@ -224,6 +233,7 @@ void ISRSet(void)
  */
 void pinHandler(char portIndex, char pinIndex, char fallingEdge)
 {
+//    printf("fallingEdge = %u\n", fallingEdge);
     char keyIndex = (portIndex-1)*8 + pinIndex;  //generate key lookup index
     char key = MIDINote[keyIndex];               //get key value from keymapping
 
@@ -231,9 +241,9 @@ void pinHandler(char portIndex, char pinIndex, char fallingEdge)
     {
         uint16_t newTime = TA1R;        //get current timer time;
         uint16_t oldTime = keyTimes[keyIndex];
-        if(!fallingEdge)              //low comparator rising, first edge
+        uint16_t deltaTime = newTime - oldTime; //calculate velocity
+        if(!fallingEdge && deltaTime > HACK_VALUE)              //low comparator rising, first edge
         {
-            uint16_t deltaTime = newTime - oldTime; //calculate velocity
             char deltaVelocity = convertVelocity(deltaTime);
             MIDIOn((key & ~(BIT7)), deltaVelocity);        //Play Note
             MIDISent[key & ~(BIT7)] = 1;
@@ -255,34 +265,53 @@ void pinHandler(char portIndex, char pinIndex, char fallingEdge)
  * @return
  *  char - velocity value [0-127]
  */
+//char convertVelocity(uint16_t deltaTime)
+//{
+////    printf("Delta = %u \n", deltaTime);
+//
+//    if (deltaTime > 15000){                               //cap off to go in our range
+//            deltaTime = 15000;
+//                }
+//
+//        if (deltaTime < 1100 & (deltaTime != 5)){
+//            deltaTime = 1100;
+//                }
+//
+//        float temp = deltaTime;
+//        temp = ((temp-1100)/(13000))*127.0;                     //divide into our range (1-127)
+//
+//        uint8_t vol = temp;                             //get integer value
+//
+//        if(vol<10){
+//            vol = 10;
+//                }
+//        if(vol > 120){
+//            vol = 120;
+//                }
+//        uint8_t volume = 128 - vol;
+//
+//            return volume;
+//
+////    return 127;
+//}
+
 char convertVelocity(uint16_t deltaTime)
 {
-//    printf("Delta = %u \n", deltaTime);
+    if(deltaTime < LOW_TIME)    //limit values
+        deltaTime = LOW_TIME;
+    if(deltaTime > HIGH_TIME)
+        deltaTime = HIGH_TIME;
 
-    if (deltaTime > 15000){                               //cap off to go in our range
-            deltaTime = 15000;
-                }
+    deltaTime = HIGH_TIME - deltaTime;  //Invert and scale from 0
 
-        if (deltaTime < 1100 & (deltaTime != 5)){
-            deltaTime = 1100;
-                }
-
-        float temp = deltaTime;
-        temp = ((temp-1100)/(13000))*127.0;                     //divide into our range (1-127)
-
-        uint8_t vol = temp;                             //get integer value
-
-        if(vol<10){
-            vol = 10;
-                }
-        if(vol > 120){
-            vol = 120;
-                }
-        uint8_t volume = 128 - vol;
-
-            return volume;
-
-//    return 127;
+    char tangent;
+    for(tangent = 0; tangent < NUM_TANGENTS; tangent++)
+    {
+        char index = NUM_TANGENTS - 1 - tangent;
+        if(deltaTime > velocityCutoffs[index])
+            return ((deltaTime - velocityCutoffs[index])/velocitySlopes[index] + velocityIntercepts[index]) & (127);
+    }
+    return 0;
 }
 
 /* Inits a note on MIDI
