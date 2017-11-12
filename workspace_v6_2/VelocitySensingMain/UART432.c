@@ -1,13 +1,13 @@
 /*
- * UART.c
+ * UART432.c
  *
  *  Created on: Dec 2, 2016
  *      Author: hankyang
  *  Implement software buffer
  */
 
+#include <UART432.h>
 #include "msp432p401r.h"
-#include "UART.h"
 #include "BNC.h"
 
 //#include <string.h>

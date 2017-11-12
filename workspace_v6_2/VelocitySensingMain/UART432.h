@@ -1,13 +1,13 @@
 /*
- * UART.h
+ * UART432.h
  *
  *  Created on: Dec 2, 2016
  *      Author: hankyang
  *  Implement UART software buffers for MIDI testing
  */
 
-#ifndef UART_H_
-#define UART_H_
+#ifndef UART432_H_
+#define UART432_H_
 
 
 // define the buffer size to be 50 bytes (50*8 bits)
@@ -19,4 +19,4 @@ void UARTSendArray(char *TxArray, char ArrayLength);
 void UARTSendIntArray(int *data, char length);
 extern void EUSCIA3_IRQHandler(void);
 
-#endif /* UART_H_ */
+#endif /* UART432_H_ */

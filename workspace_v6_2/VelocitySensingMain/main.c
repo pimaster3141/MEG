@@ -6,7 +6,7 @@
 /* Standard Includes */
 #include <stdint.h>
 #include <stdbool.h>
-#include <UART.H>
+#include <UART432.h>
 
 
 /* ---------------------- HARDWARE DEFINES ---------------------- */
