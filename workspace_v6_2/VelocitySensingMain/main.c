@@ -2,11 +2,11 @@
 /* DriverLib Includes */
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "msp432p401r.h"
-#include "UART.h"
 
 /* Standard Includes */
 #include <stdint.h>
 #include <stdbool.h>
+#include <UART.H>
 
 
 /* ---------------------- HARDWARE DEFINES ---------------------- */
@@ -53,6 +53,28 @@ const char MIDINote[NUM_PORTS*8] =
 
 
 
+/* ---------------------- FUNCTION DECLARATIONS ---------------------- */
+void keyRelease(char port, char portData);
+void setup(void);
+void SysSet(void);
+void UARTSet (void);
+void BNCSet(void);
+void TimerSet(void);
+void ISRSet(void);
+void pinHandler(char portIndex, char pinIndex, char fallingEdge);
+char convertVelocity(uint16_t deltaTime);
+void MIDIOn(char pitch, char volume);
+void MIDIOff(char pitch);
+void PORT1_IRQHandler(void);
+void PORT2_IRQHandler(void);
+void PORT3_IRQHandler(void);
+void PORT4_IRQHandler(void);
+void PORT5_IRQHandler(void);
+void PORT6_IRQHandler(void);
+/* ---------------------- END FUNCTION DECLARATIONS ---------------------- */
+
+
+
 
 int main(void)
 {
@@ -84,7 +106,7 @@ void keyRelease(char port, char portData)
     {
         char keyIndex = (port - 1)*8 + bit;
         char key = MIDINote[keyIndex];               //get key value from keymapping
-        if((MIDINote[keyIndex] & BIT7)  && MIDISent[key & ~(BIT7)] && (portData & (mask << bit)))
+        if((MIDINote[keyIndex] & BIT7)  && MIDISent[key & ~(BIT7)] && (portData & (mask << bit))) //IF(isHighComparator, MidiSentOut, pinIsHigh)
         {
             MIDIOff(MIDINote[keyIndex] & ~(BIT7));
             keyTimes[keyIndex] = 0;
@@ -235,7 +257,7 @@ void pinHandler(char portIndex, char pinIndex, char fallingEdge)
  */
 char convertVelocity(uint16_t deltaTime)
 {
-    printf("Delta = %u \n", deltaTime);
+//    printf("Delta = %u \n", deltaTime);
 
     if (deltaTime > 15000){                               //cap off to go in our range
             deltaTime = 15000;
@@ -260,7 +282,7 @@ char convertVelocity(uint16_t deltaTime)
 
             return volume;
 
-    return 127;
+//    return 127;
 }
 
 /* Inits a note on MIDI
