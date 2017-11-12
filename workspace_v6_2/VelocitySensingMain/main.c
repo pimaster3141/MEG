@@ -117,9 +117,9 @@ void SysSet(void)
 
     /*Following are primary registers for necessary clock functions*/
 
-        CS->CTL0 = 0x00810000;
-        CS->CTL1 = 0x50300033;
-        CS->CLKEN = 0x0000000E;
+        CS->CTL0 = 0x00810000; //DCOEN, DCORSEL_1(3MHz),
+        CS->CTL1 = 0x50300033; //DIVS(/32), DIVHS(/8), SELS(DCO), SELM(DCO)
+        CS->CLKEN = 0x0000000E; //SMCLK_EN, HSMCLK_EN, MCLK_EN
         CS->KEY = 0x00010000;        //lock all clock registers
 
 
