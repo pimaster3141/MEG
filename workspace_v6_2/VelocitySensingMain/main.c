@@ -325,7 +325,7 @@ void MIDIOn(char pitch, char volume)
     P10OUT = pitch | BIT5;
     char payload[3] = {MIDI_ON, pitch + KEY_OFFSET, volume};
     UARTSendArray(payload, 3);
-//    P10OUT = 0;
+    P10OUT = 0;
 //    __no_operation();
 }
 
@@ -338,7 +338,7 @@ void MIDIOff(char pitch)
     P10OUT = pitch;
     char payload[3] = {MIDI_OFF, pitch + KEY_OFFSET, 0};
     UARTSendArray(payload, 3);
-//    P10OUT = 0;
+    P10OUT = 0;
 //    __no_operation();
 }
 /* ---------------------- END KEY OUTPUT CODE ---------------------- */

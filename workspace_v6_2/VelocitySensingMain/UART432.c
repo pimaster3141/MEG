@@ -107,10 +107,6 @@ void EUSCIA3_IRQHandler(void)
 		if(UARTTXBufferSendoutPointer == UART_TX_BUFFER_SIZE)
 			UARTTXBufferSendoutPointer = 0;
 		if(UARTTXBufferSendoutPointer == UARTTXBufferEndPointer)
-		{
 			UCA3IE &= ~UCTXIE;     //Disable Interrupt
-			__delay_cycles(2000);   //Delay Hack - should remove someday.
-			P10OUT = 0;
-		}
 	}
 }
