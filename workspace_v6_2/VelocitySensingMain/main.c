@@ -35,13 +35,13 @@
 
 
 /* ---------------------- KEYMAPPING AND KEYSTATES ---------------------- */
-//const uint16_t velocityCutoffs[NUM_TANGENTS] = {0, 20860, 24982, 27417, 29152};
-//const uint16_t velocitySlopes[NUM_TANGENTS] = {679, 138, 82, 58, 49};
-//const char velocityIntercepts[NUM_TANGENTS] = {0, 30, 59, 88, 117};
+const uint16_t velocityCutoffs[NUM_TANGENTS] = {0, 20860, 24982, 27417, 29152};
+const uint16_t velocitySlopes[NUM_TANGENTS] = {679, 138, 82, 58, 49};
+const char velocityIntercepts[NUM_TANGENTS] = {0, 30, 59, 88, 117};
 
-const uint16_t velocityCutoffs[NUM_TANGENTS] = {0, 19902, 24000, 26426, 28156};
-const uint16_t velocitySlopes[NUM_TANGENTS] = {784, 161, 96, 68, 53};
-const char velocityIntercepts[NUM_TANGENTS] = {0, 25, 50, 75, 100};
+//const uint16_t velocityCutoffs[NUM_TANGENTS] = {0, 19902, 24000, 26426, 28156};
+//const uint16_t velocitySlopes[NUM_TANGENTS] = {784, 161, 96, 68, 53};
+//const char velocityIntercepts[NUM_TANGENTS] = {0, 25, 50, 75, 100};
 
 // data structure to hold key timing values
 static volatile uint16_t keyTimes[NUM_PORTS*8] = {};
@@ -329,7 +329,7 @@ void MIDIOn(char pitch, char volume)
     P10OUT = pitch | BIT5;
     char payload[3] = {MIDI_ON, pitch + KEY_OFFSET, volume};
     UARTSendArray(payload, 3);
-//    P10OUT = 0;
+    P10OUT = 0;
 //    __no_operation();
 }
 
@@ -342,7 +342,7 @@ void MIDIOff(char pitch)
     P10OUT = pitch;
     char payload[3] = {MIDI_OFF, pitch + KEY_OFFSET, 0};
     UARTSendArray(payload, 3);
-//    P10OUT = 0;
+    P10OUT = 0;
 //    __no_operation();
 }
 /* ---------------------- END KEY OUTPUT CODE ---------------------- */
